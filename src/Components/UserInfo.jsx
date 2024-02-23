@@ -19,20 +19,6 @@ function UserInfo() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (userInfo || error) {
-  //     console.log('if block was run but why i dont know');
-  //     setAlertBox(true);
-  //   };
-
-  //   if (userInfo && userInfo.data) {
-  //     setTimeout(() => {
-  //       setAlertBox(false);
-  //     }, 2000);
-  //     navigate('/dashboard');
-  //   };
-  // }, [navigate, dispatch, userLogin]);
-
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
 
@@ -44,9 +30,9 @@ function UserInfo() {
   }
 
   const handlePopup = (e) => {
+    alert('Not available right now!');
     // setValue(e.target.value);
     // setPopup(true);
-    alert('Not available right now!');
   }
 
   return (
@@ -99,7 +85,7 @@ function UserInfo() {
         <Loader />
       ) : error ? (
         alertBox && <Message success={userInfo ? userInfo.success : error && false} message={userInfo ? userInfo.message : error && error} setShowAlertBox={setAlertBox} />
-      ) : null}
+      ) : 'null part'}
     </>
   );
 

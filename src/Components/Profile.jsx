@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Sidebar from './Sidebar'
-// import Home from './Home'
 import Inventory from './Inventory'
 import Transactions from './Transactions'
 import UserInfo from './UserInfo'
@@ -30,7 +29,7 @@ function Profile({ toggle, setToggle }) {
 
     return (
         <>
-            <Header toggle={toggle} setToggle={setToggle} />
+            <Header toggle={toggle} setToggle={setToggle} />    
             <div className='flex'>
                 <Sidebar toggle={toggle} setToggle={setToggle} onItemClick={handleItemClick} selectedItem={selectedItem} />
                 <div className='w-full p-4'>

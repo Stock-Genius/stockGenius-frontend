@@ -2,25 +2,13 @@ import axios from "axios";
 import { logout } from "./action";
 
 // get all my items
-export const getItems = () => async (dispatch, getState) => {
+export const getItems = (config) => async (dispatch, getState) => {
     try {
         dispatch({
             type: 'GET_ITEMS_REQUEST',
         });
 
-        const {
-            userLogin: { userInfo },
-        } = getState();
-
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${userInfo.token}`,
-            },
-        };
-
         const { data } = await axios.get('/api/items', config);
-
         dispatch({ type: 'GET_ITEMS_SUCCESS', payload: data.data });
 
         localStorage.setItem('stock', JSON.stringify(data.data));
@@ -194,22 +182,22 @@ export const sellAndUpdate = (obj) => async (dispatch, getState) => {
 
 
 // get all selling history
-export const mySellHistory = () => async (dispatch, getState) => {
+export const mySellHistory = (config) => async (dispatch, getState) => {
     try {
         dispatch({
             type: 'GET_SELL_ITEM_REQUEST',
         });
 
-        const {
-            userLogin: { userInfo },
-        } = getState();
+        // const {
+        //     userLogin: { userInfo },
+        // } = getState();
 
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${userInfo.token}`,
-            },
-        };
+        // const config = {
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: `Bearer ${userInfo.token}`,
+        //     },
+        // };
 
         const { data } = await axios.get('/api/items/sell', config);
 

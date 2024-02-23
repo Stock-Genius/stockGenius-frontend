@@ -43,9 +43,9 @@ export const login = (obj) => async (dispatch) => {
         };
 
         const { data } = await axios.post('/api/users/login', obj, config);
-
+        console.log(data, 'login');
         dispatch({ type: "USER_LOGIN_SUCCESS", payload: data });
-
+        
         localStorage.setItem('userInfo', JSON.stringify(data.data));
 
     } catch (error) {

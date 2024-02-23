@@ -22,19 +22,36 @@ function Inventory() {
   const myItems = useSelector((state) => state.myItems);
   const { items, loading, error } = myItems;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo, success: userSuccess } = userLogin;
+
   const updateItem = useSelector((state) => state.updateItem);
   const { error: updateError, success, message } = updateItem;
 
   const deleteItem = useSelector((state) => state.deleteItem);
   const { error: deleteError, success: deleteSuccess, message: deleteMessage } = deleteItem;
 
-  useEffect(() => {
-    dispatch(getItems());
-    if (error || message || success || deleteSuccess || deleteMessage) {
-      setAlertBox(true);
-    };
+  const userInfoFromStorage = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
 
-  }, [dispatch, activeTab, success, message, deleteSuccess, deleteMessage]);
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userInfoFromStorage.token}`,
+    },
+  };
+  useEffect(() => {
+    dispatch(getItems(config))
+  }, []);
+
+  // useEffect(() => {
+  //   dispatch(getItems());
+  //   if (error || message || success || deleteSuccess || deleteMessage) {
+  //     setAlertBox(true);
+  //   };
+
+  // }, [dispatch, activeTab, success, message, deleteSuccess, deleteMessage]);
 
   //popup handler
   const handlePopup = (e, ele, id) => {

@@ -15,6 +15,7 @@ function App() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('userInfo'));
     if (!user?.token) {
+      console.log('if block in app.js');
       navigate('/');
     } else {
       navigate('/dashboard');

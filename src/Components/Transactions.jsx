@@ -66,9 +66,21 @@ function Transactions() {
   const [selectedProduct, setSelectedProduct] = useState(initial);
   const [productIndex, setProductIndex] = useState("");
 
+
+  const userInfoFromStorage = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userInfoFromStorage.token}`,
+    },
+  };
+
   useEffect(() => {
-    dispatch(getItems());
-    dispatch(mySellHistory());
+    dispatch(getItems(config));
+    dispatch(mySellHistory(config));
   }, [activeTab]);
 
   const myItems = useSelector((state) => state.myItems);
@@ -127,7 +139,7 @@ function Transactions() {
 
   useEffect(() => {
     filterHistory(selectedFromDate, selectedToDate);
-  }, [selectedFromDate, activeTab,selectedToDate]);
+  }, [selectedFromDate, activeTab, selectedToDate]);
 
 
   // change date format
@@ -157,11 +169,11 @@ function Transactions() {
   const deleteSellItem = useSelector((state) => state.deleteSellItem);
   const { loading: deleteLoading, success: deleteSuccess, error: deleteError, message: deleteMessage } = deleteSellItem;
 
-  useEffect(()=>{
-    if(deleteMessage || deleteSuccess || deleteError){
+  useEffect(() => {
+    if (deleteMessage || deleteSuccess || deleteError) {
       setAlertBox(true);
     }
-  },[deleteSellItem]);
+  }, [deleteSellItem]);
 
   const profits = itemsHistory ? filteredData.map((transaction) => {
     const buyPrice = parseFloat(transaction.buyPrice);
@@ -189,8 +201,6 @@ function Transactions() {
     setValue(e.target.value)
     setPopup(true)
   };
-
-  console.log(deleteError,'id are here');
 
   return (
     <>
@@ -304,7 +314,6 @@ function Transactions() {
                         <div className="mb-4 w-full">
                           <label className='text-sm opacity-80 italic lowercase'><span className='text-red-500'>*</span>Select an item</label>
                           <select
-                            // id="products"
                             name='name'
                             value={selectedProduct?.name || ''}
                             onChange={(e) => {

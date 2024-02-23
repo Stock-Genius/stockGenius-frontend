@@ -1,7 +1,9 @@
+// postcss.config.js
 module.exports = {
   plugins: {
-    'postcss-nested': {}, // Add this line for nested CSS support
-    'tailwindcss': {},
-    'autoprefixer': {},
-  },
+    'postcss-import': {},
+    'tailwindcss/nesting': 'postcss-nesting',
+    tailwindcss: {},
+    autoprefixer: {},
+  }
 }

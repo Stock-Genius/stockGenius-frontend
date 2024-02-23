@@ -6,9 +6,9 @@ function Header({ toggle, setToggle }) {
   const { userInfo } = userLogin;
   // #28427B  .  #4C7DAE   #00706A
   return (
-    <header className='bg-primary shadow sticky top-0 z-20 flex items-center md:justify-center transition-all duration-100 px-3 md:p-2 md:tracking-widest'>
+    <header className='bg-primary shadow-lg sticky top-0 z-50 flex items-center md:justify-center transition-all duration-100 px-3 md:p-2 md:tracking-widest'>
       <div className='w-24 h-20 lg:h-24 p-3 flex items-center justify-center rounded px-4'>
-        <img src="/img/logo.png" className='h-full w-full' alt="" />
+        <img src="/img/logo.png" className='drop-shadow-md h-full w-full' alt="" />
       </div>
       <div className='flex justify-end w-full'>
           <h2 className='text-white heading font-bold md:px-2 text-2xl hidden md:block  capitalize'>{userInfo ? userInfo.shopname : 'Inventory Management Tool'}</h2>
