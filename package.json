@@ -1,6 +1,6 @@
 {
   "name": "inventory-management-software",
-  "proxy": "https://stockgenius-server.onrender.com",
+  "proxy": "https://stockgenius-server.onrender.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -24,7 +24,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "json-server db.json --watch --port 5000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
