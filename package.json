@@ -1,6 +1,6 @@
 {
   "name": "inventory-management-software",
-  "proxy": "http://localhost:6000",
+  "proxy": "https://stockgenius-server.onrender.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

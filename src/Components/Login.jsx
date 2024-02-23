@@ -57,7 +57,7 @@ function Login() {
             {alertBox && <Message success={userInfo ? userInfo.success : error && false} message={userInfo ? userInfo.message : error && error} setShowAlertBox={setAlertBox} />}
             <div className="mb-8">
               <img
-                src='/img/login.png'
+                src='/img/login.jpg'
                 alt="Illustration"
                 className="w-full max-w-md h-auto mx-auto"
               />
