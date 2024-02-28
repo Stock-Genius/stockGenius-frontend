@@ -26,7 +26,6 @@ function Login() {
 
   useEffect(() => {
     if (userInfo || error) {
-      console.log('if block was run but why i dont know');
       setAlertBox(true);
     };
 

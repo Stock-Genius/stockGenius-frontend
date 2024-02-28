@@ -1,14 +1,28 @@
 import axios from "axios";
 import { logout } from "./action";
 
+const baseUrl = "https://stockgenius-server.onrender.com";
+
 // get all my items
-export const getItems = (config) => async (dispatch, getState) => {
+export const getItems = () => async (dispatch, getState) => {
     try {
         dispatch({
             type: 'GET_ITEMS_REQUEST',
         });
 
-        const { data } = await axios.get('/api/items', config);
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.get(`${baseUrl}/api/items`, config);
+
         dispatch({ type: 'GET_ITEMS_SUCCESS', payload: data.data });
 
         localStorage.setItem('stock', JSON.stringify(data.data));
@@ -47,7 +61,7 @@ export const updateMyItem = (obj) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`/api/items/${obj._id}`, obj, config);
+        const { data } = await axios.put(`${baseUrl}/api/items/${obj._id}`, obj, config);
 
         dispatch({ type: 'UPDATE_ITEM_SUCCESS', payload: data })
 
@@ -87,7 +101,7 @@ export const deleteMyItem = (id) => async (dispatch, getState) => {
             },
         }
 
-        const { data } = await axios.delete(`/api/items/${id}`, config);
+        const { data } = await axios.delete(`${baseUrl}/api/items/${id}`, config);
 
         dispatch({ type: 'ITEM_DELETE_SUCCESS', payload: data });
 
@@ -124,7 +138,7 @@ export const addMyItem = (obj) => async (dispatch, getState) => {
             },
         }
 
-        const { data } = await axios.post(`/api/items`, obj, config);
+        const { data } = await axios.post(`${baseUrl}/api/items`, obj, config);
 
         dispatch({ type: 'ADD_ITEM_SUCCESS', payload: data })
 
@@ -161,7 +175,7 @@ export const sellAndUpdate = (obj) => async (dispatch, getState) => {
             },
         }
 
-        const { data } = await axios.put(`/api/items/sell/${obj._id}`, obj, config);
+        const { data } = await axios.put(`${baseUrl}/api/items/sell/${obj._id}`, obj, config);
 
         dispatch({ type: 'ITEM_SELL_SUCCESS', payload: data })
 
@@ -199,7 +213,7 @@ export const mySellHistory = (config) => async (dispatch, getState) => {
         //     },
         // };
 
-        const { data } = await axios.get('/api/items/sell', config);
+        const { data } = await axios.get(`${baseUrl}/api/items/sell`, config);
 
         dispatch({ type: 'GET_SELL_ITEM_SUCCESS', payload: data.data });
 
@@ -241,7 +255,7 @@ export const deleteItemByHistory = (id) => async (dispatch, getState) => {
             },
         }
 
-        await axios.delete(`/api/items/sell/${id}`, config)
+        await axios.delete(`${baseUrl}/api/items/sell/${id}`, config)
 
         dispatch({
             type: 'ITEM_DELETE_SUCCESS',

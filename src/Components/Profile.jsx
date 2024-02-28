@@ -7,7 +7,7 @@ import ServerError from './ServerError'
 import Header from './Header'
 
 
-function Profile({ toggle, setToggle }) {
+function Profile({ toggle, setToggle, darkMode, setDarkMode }) {
     const [selectedItem, setSelectedItem] = useState('Inventory');
 
     const handleItemClick = (item) => {
@@ -29,10 +29,10 @@ function Profile({ toggle, setToggle }) {
 
     return (
         <>
-            <Header toggle={toggle} setToggle={setToggle} />    
-            <div className='flex'>
+            <Header toggle={toggle} setToggle={setToggle} setDarkMode={setDarkMode} darkMode={darkMode} />
+            <div className='flex justify-center dark:bg-main'>
                 <Sidebar toggle={toggle} setToggle={setToggle} onItemClick={handleItemClick} selectedItem={selectedItem} />
-                <div className='w-full p-4'>
+                <div className='w-full dark:bg-main'>
                     {renderComponent()}
                 </div>
             </div>

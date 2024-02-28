@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const baseUrl = "https://stockgenius-server.onrender.com";
 
 // regiister new user
 export const register = (obj) => async (dispatch) => {
@@ -14,7 +15,7 @@ export const register = (obj) => async (dispatch) => {
             },
         }
 
-        const { data } = await axios.post('/api/users', obj, config);
+        const { data } = await axios.post(`${baseUrl}/api/users`, obj, config);
 
         dispatch({ type: 'USER_REGISTER_SUCCESS', payload: data })
         console.log(data, 'data in action');
@@ -31,10 +32,10 @@ export const register = (obj) => async (dispatch) => {
     }
 };
 
+
 // login existing user 
 export const login = (obj) => async (dispatch) => {
     try {
-        console.log('try block');
         dispatch({ type: "USER_LOGIN_REQUEST" });
         const config = {
             headers: {
@@ -42,10 +43,10 @@ export const login = (obj) => async (dispatch) => {
             }
         };
 
-        const { data } = await axios.post('/api/users/login', obj, config);
-        console.log(data, 'login');
-        dispatch({ type: "USER_LOGIN_SUCCESS", payload: data });
-        
+        const { data } = await axios.post(`${baseUrl}/api/users/login`, obj, config);
+
+        dispatch({ type: "USER_LOGIN_SUCCESS", payload: data.data });
+
         localStorage.setItem('userInfo', JSON.stringify(data.data));
 
     } catch (error) {

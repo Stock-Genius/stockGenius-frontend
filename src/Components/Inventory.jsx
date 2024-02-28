@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Popup from './Popup';
-import { getItems } from '../actions/itemsAction';
-import Loader from './Loader';
-import Message from './Message';
-import OutOfStock from './OutOfStock';
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Popup from "./Popup";
+import { getItems } from "../actions/itemsAction";
+import Loader from "./Loader";
+import Message from "./Message";
+import OutOfStock from "./OutOfStock";
 
 function Inventory() {
-
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [searchedData, setSearchedData] = useState("");
@@ -22,60 +20,61 @@ function Inventory() {
   const myItems = useSelector((state) => state.myItems);
   const { items, loading, error } = myItems;
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo, success: userSuccess } = userLogin;
-
   const updateItem = useSelector((state) => state.updateItem);
   const { error: updateError, success, message } = updateItem;
 
   const deleteItem = useSelector((state) => state.deleteItem);
-  const { error: deleteError, success: deleteSuccess, message: deleteMessage } = deleteItem;
+  const {
+    error: deleteError,
+    success: deleteSuccess,
+    message: deleteMessage,
+  } = deleteItem;
 
-  const userInfoFromStorage = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
+  const userInfo = useSelector((state) => state.userLogin);
 
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${userInfoFromStorage.token}`,
-    },
-  };
   useEffect(() => {
-    dispatch(getItems(config))
-  }, []);
-
-  // useEffect(() => {
-  //   dispatch(getItems());
-  //   if (error || message || success || deleteSuccess || deleteMessage) {
-  //     setAlertBox(true);
-  //   };
-
-  // }, [dispatch, activeTab, success, message, deleteSuccess, deleteMessage]);
+    if (userInfo) {
+      dispatch(getItems());
+    }
+    if (error || message || success || deleteSuccess || deleteMessage) {
+      setAlertBox(true);
+    }
+  }, [
+    dispatch,
+    userInfo,
+    activeTab,
+    success,
+    message,
+    deleteSuccess,
+    deleteMessage,
+  ]);
 
   //popup handler
   const handlePopup = (e, ele, id) => {
-    setSeletedProduct(ele)
-    setProductIndex(id)
-    setValue(e.target.value)
-    setPopup(true)
+    setSeletedProduct(ele);
+    setProductIndex(id);
+    setValue(e.target.value);
+    setPopup(true);
   };
 
   //serching logic
   let searching = [];
   const handleSearch = (e) => {
     setSearch(e.target.value.toLowerCase());
-    searching = items ? items.filter((ele) => ele.name.toLowerCase().includes(search)) : []
-    setSearchedData(searching)
+    searching = items
+      ? items.filter((ele) => ele.name.toLowerCase().includes(search))
+      : [];
+    setSearchedData(searching);
 
     if (e.target.value === "") {
       setSearchedData("");
-    };
-  }
+    }
+  };
 
   const handleTabChange = (tabNumber) => {
     setActiveTab(tabNumber);
   };
+
 
   return (
     <>
@@ -91,22 +90,22 @@ function Inventory() {
             />
           )}
 
-          <h1 className="text-2xl font-semibold mb-4">Inventory</h1>
+          <h1 className="text-2xl font-semibold mb-4 dark:text-neutral-100">Inventory</h1>
           <div className="flex mb-2">
-            <button
-              className={`px-4 py-2 mr-4 ${activeTab === 1 ? 'bg-primary text-white' : 'bg-gray-300 text-gray-700'
-                }`}
-              onClick={() => handleTabChange(1)}
-            >
-              All
-            </button>
-            <button
-              className={`px-4 py-2 mr-4 ${activeTab === 2 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700'
-                }`}
-              onClick={() => handleTabChange(2)}
-            >
-              Out Of Stock
-            </button>
+          <button
+                className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-primary after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 1 ? 'bg-primary text-white after:left-0' : 'after:-left-full'
+                  }`}
+                onClick={() => handleTabChange(1)}
+              >
+                All
+              </button>
+              <button
+                className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-red-500 after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 2 ? 'bg-red-500 text-white after:left-0' : 'after:-left-full'
+                  }`}
+                onClick={() => handleTabChange(2)}
+              >
+                Out Of Stock
+              </button>
           </div>
 
           {activeTab === 1 && (
@@ -118,7 +117,7 @@ function Inventory() {
                       type="search"
                       value={search}
                       onChange={handleSearch}
-                      className="relative m-0 -mr-0.5 block min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none"
+                      className="dark:bg-third dark:outline-none dark:text-neutral-300 dark:border-none relative m-0 -mr-0.5 block min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none"
                       placeholder="Search"
                     />
                   </div>
@@ -127,46 +126,52 @@ function Inventory() {
               {items ? (
                 <div>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300">
+                    <table className="min-w-full bg-white dark:border-none border border-gray-300 dark:bg-third">
                       {(items.length !== 0) || searchedData.length !== 0 ? (
-                        <thead>
+                        <thead className='dark:text-white text-gray-700 dark:bg-secondary border-neutral-600 bg-gray-200'>
                           <tr>
-                            <th className="px-6 py-3 bg-gray-200 text-gray-700">Product</th>
-                            <th className="px-6 py-3 bg-gray-200 text-gray-700">Stock</th>
-                            <th className="px-6 py-3 bg-gray-200 text-gray-700">Price</th>
-                            <th className="px-6 py-3 bg-gray-200 text-gray-700">Edit</th>
-                            <th className="px-6 py-3 bg-gray-200 text-gray-700">Delete</th>
+                            <th className="px-6 py-3">Image</th>
+                            <th className="px-6 py-3">Product</th>
+                            <th className="px-6 py-3">brand</th>
+                            <th className="px-6 py-3">Stock</th>
+                            <th className="px-6 py-3">Price</th>
+                            <th className="px-6 py-3">Edit</th>
+                            <th className="px-6 py-3">Delete</th>
                           </tr>
                         </thead>
                       ) : (
                         <p className="text-lg font-semibold m-4">Add your products and let the magic begin! ✨ #StartSelling</p>
                       )}
-                      <tbody>
+                      <tbody className='dark:text-neutral-400'>
                         {items ? (
                           searchedData.length > 0 ? (
                             searchedData.map((ele, i) => (
-                              <tr key={i} className="text-sm md:text-base hover:bg-gray-100 lowercase">
-                                <td className="px-6 py-3 border-b text-center">{ele.name}</td>
-                                <td className={`px-6 py-3 border-b text-center ${ele.qty === 0 && 'text-red-600 font-semibold'}`}>{ele.qty === 0 ? 'out of stock' : ele.qty}</td>
-                                <td className="px-6 py-3 border-b text-center">{ele.sellPrice}</td>
-                                <td className="px-6 py-3 border-b text-center">
+                              <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100 capitalize">
+                                <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
+                                  <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                </td>
+                                <td className="px-6 py-3 text-center">{ele.name}</td>
+                                <td className="px-6 py-3 text-center">{ele.brand}</td>
+                                <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
+                                <td className="px-6 py-3 text-center">
                                   <button
                                     onClick={(e) => {
                                       handlePopup(e, ele, ele._id);
                                     }}
                                     value="edit"
-                                    className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
+                                    className="bg-gray-200 dark:bg-main dark:hover:bg-primary px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
                                   >
                                     <i className="fas fa-pencil pointer-events-none"></i>
                                   </button>
                                 </td>
-                                <td className="px-6 py-3 border-b text-center">
+                                <td className="px-6 py-3 text-center">
                                   <button
                                     onClick={(e) => {
                                       handlePopup(e, ele, ele._id);
                                     }}
                                     value="delete"
-                                    className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-red-600 text-red-400 hover:text-white"
+                                    className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
                                   >
                                     <i className="fas fa-trash pointer-events-none"></i>
                                   </button>
@@ -180,28 +185,32 @@ function Inventory() {
                               </tr>
                             ) : (
                               items.map((ele, i) => (
-                                <tr key={i} className="hover:bg-gray-100 text-sm md:text-base lowercase">
-                                  <td className="px-6 py-3 border-b text-center">{ele.name}</td>
-                                  <td className={`px-6 py-3 border-b text-center ${ele.qty === 0 && 'text-red-600 font-semibold'}`}>{ele.qty === 0 ? 'out of stock' : ele.qty}</td>
-                                  <td className="px-6 py-3 border-b text-center">{ele.sellPrice}</td>
-                                  <td className="px-6 py-3 border-b text-center">
+                                <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100 capitalize">
+                                  <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
+                                    <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                  </td>
+                                  <td className="px-6 py-3 text-center">{ele.name}</td>
+                                  <td className="px-6 py-3 text-center">{ele.brand}</td>
+                                  <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                  <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
+                                  <td className="px-6 py-3 text-center">
                                     <button
                                       onClick={(e) => {
                                         handlePopup(e, ele, ele._id);
                                       }}
                                       value="edit"
-                                      className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
+                                      className="bg-gray-200 dark:bg-main dark:hover:bg-primary px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
                                     >
                                       <i className="fas fa-pencil pointer-events-none"></i>
                                     </button>
                                   </td>
-                                  <td className="px-6 py-3 border-b text-center">
+                                  <td className="px-6 py-3 text-center">
                                     <button
                                       onClick={(e) => {
                                         handlePopup(e, ele, ele._id);
                                       }}
                                       value="delete"
-                                      className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-red-600 text-red-400 hover:text-white"
+                                      className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
                                     >
                                       <i className="fas fa-trash pointer-events-none"></i>
                                     </button>
@@ -212,21 +221,19 @@ function Inventory() {
                           )
                         ) : null}
                       </tbody>
-                      <Popup
-                        state={popup}
-                        setPopup={setPopup}
-                        popupValue={value}
-                        selectedProduct={selectedProduct}
-                        setUpdateProduct={setSeletedProduct}
-                        productId={productIndex}
-                      />
                     </table>
+                    <Popup
+                      state={popup}
+                      setPopup={setPopup}
+                      popupValue={value}
+                      selectedProduct={selectedProduct}
+                      setUpdateProduct={setSeletedProduct}
+                      productId={productIndex}
+                    />
                   </div>
                 </div>
               ) : loading ? (
-                <div className="h-80 flex justify-center items-center">
-                  <div class="spinner"></div>
-                </div>
+                <Loader />
               ) : null}
             </>
           )}

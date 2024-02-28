@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getItems } from '../actions/itemsAction';
-import { useDispatch, useSelector } from 'react-redux';
+// import { getItems } from '../actions/itemsAction';
+import { useSelector } from 'react-redux';
 import Popup from './Popup';
 import Loader from './Loader';
 
@@ -32,48 +32,54 @@ function OutOfStock() {
 
     return (
         <>
-            <p className="md:text-lg font-semibold m-4">'Update your stock and grow your business “😉”. Keep growing!'</p>
+            <p className="md:text-lg font-semibold m-4 dark:text-neutral-100">'Update your stock and grow your business “😉”. Keep growing!'</p>
             <hr />
             {loading ? (<Loader />) : (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300">
+                    <table className="min-w-full bg-white dark:border-none border border-gray-300 dark:bg-third">
                         {outOfStock && outOfStock.length !== 0 ? (
-                            <thead>
+                            <thead className='dark:text-white text-gray-700 dark:bg-secondary border-neutral-600 bg-gray-200'>
                                 <tr>
-                                    <th className="px-6 py-3 bg-gray-200 text-gray-700">Product</th>
-                                    <th className="px-6 py-3 bg-gray-200 text-gray-700">Stock</th>
-                                    <th className="px-6 py-3 bg-gray-200 text-gray-700">Price</th>
-                                    <th className="px-6 py-3 bg-gray-200 text-gray-700">Edit</th>
-                                    <th className="px-6 py-3 bg-gray-200 text-gray-700">Delete</th>
+                                    <th className="px-6 py-3">Image</th>
+                                    <th className="px-6 py-3">Product</th>
+                                    <th className="px-6 py-3">Brand</th>
+                                    <th className="px-6 py-3">Stock</th>
+                                    <th className="px-6 py-3">Price</th>
+                                    <th className="px-6 py-3">Edit</th>
+                                    <th className="px-6 py-3">Delete</th>
                                 </tr>
                             </thead>
                         ) : (
-                            <p className="text-lg font-semibold m-4">Your stock is maintained ✨</p>
+                            <p className="text-lg font-semibold m-4 dark:text-neutral-100">Your stock is maintained ✨</p>
                         )}
-                        <tbody>
+                        <tbody className='dark:text-neutral-400'>
                             {outOfStock && outOfStock.map((ele, i) => (
-                                <tr key={i} className="hover:bg-gray-100 text-sm md:text-base lowercase">
-                                    <td className="px-6 py-3 border-b text-center">{ele.name}</td>
-                                    <td className={`px-6 py-3 border-b text-center ${ele.qty === 0 && 'text-red-600 font-semibold'}`}>{ele.qty === 0 ? 'out of stock' : ele.qty}</td>
-                                    <td className="px-6 py-3 border-b text-center">{ele.sellPrice}</td>
-                                    <td className="px-6 py-3 border-b text-center">
+                                <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:hover:bg-secondary hover:bg-gray-100 capitalize">
+                                    <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
+                                        <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                    </td>
+                                    <td className="px-6 py-3 text-center">{ele.name}</td>
+                                    <td className="px-6 py-3 text-center">{ele.brand}</td>
+                                    <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                    <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
+                                    <td className="px-6 py-3 text-center">
                                         <button
                                             onClick={(e) => {
                                                 handlePopup(e, ele, ele._id);
                                             }}
                                             value="edit"
-                                            className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
+                                            className="bg-gray-200 dark:bg-main dark:hover:bg-primary px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
                                         >
                                             <i className="fas fa-pencil pointer-events-none"></i>
                                         </button>
                                     </td>
-                                    <td className="px-6 py-3 border-b text-center">
+                                    <td className="px-6 py-3 text-center">
                                         <button
                                             onClick={(e) => {
                                                 handlePopup(e, ele, ele._id);
                                             }}
                                             value="delete"
-                                            className="bg-gray-200 px-2.5 py-1.5 rounded-full hover:bg-red-600 text-red-400 hover:text-white"
+                                            className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
                                         >
                                             <i className="fas fa-trash pointer-events-none"></i>
                                         </button>
