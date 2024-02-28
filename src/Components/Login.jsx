@@ -29,10 +29,11 @@ function Login() {
       setAlertBox(true);
     };
 
-    if (userInfo && userInfo.data) {
+    if (userInfo) {
       setTimeout(() => {
         setAlertBox(false);
       }, 2000);
+      console.log('log was run');
       navigate('/dashboard');
     };
   }, [navigate, dispatch, userLogin]);
