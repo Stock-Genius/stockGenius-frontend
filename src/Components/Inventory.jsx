@@ -39,15 +39,12 @@ function Inventory() {
     if (error || message || success || deleteSuccess || deleteMessage) {
       setAlertBox(true);
     }
-  }, [
-    dispatch,
-    userInfo,
-    activeTab,
-    success,
-    message,
-    deleteSuccess,
-    deleteMessage,
-  ]);
+  }, [dispatch, userInfo, activeTab, success, message, deleteSuccess, deleteMessage]);
+
+  useEffect(() => {
+    dispatch({ type: "UPDATE_ITEM_RESET" });
+    setAlertBox(false);
+  }, [activeTab])
 
   //popup handler
   const handlePopup = (e, ele, id) => {
@@ -92,20 +89,20 @@ function Inventory() {
 
           <h1 className="text-2xl font-semibold mb-4 dark:text-neutral-100">Inventory</h1>
           <div className="flex mb-2">
-          <button
-                className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-primary after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 1 ? 'bg-primary text-white after:left-0' : 'after:-left-full'
-                  }`}
-                onClick={() => handleTabChange(1)}
-              >
-                All
-              </button>
-              <button
-                className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-red-500 after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 2 ? 'bg-red-500 text-white after:left-0' : 'after:-left-full'
-                  }`}
-                onClick={() => handleTabChange(2)}
-              >
-                Out Of Stock
-              </button>
+            <button
+              className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-primary after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 1 ? 'bg-primary text-white after:left-0' : 'after:-left-full'
+                }`}
+              onClick={() => handleTabChange(1)}
+            >
+              All
+            </button>
+            <button
+              className={`px-4 py-2 relative after:transition-all hover:after:left-0 after:h-full after:w-full after:content-[""] after:bg-red-500 after:absolute  z-20 after:top-0 hover:text-neutral-100 dark:text-neutral-100 dark:bg-third after:-z-10 mr-4 bg-gray-300 text-gray-700 overflow-hidden ${activeTab === 2 ? 'bg-red-500 text-white after:left-0' : 'after:-left-full'
+                }`}
+              onClick={() => handleTabChange(2)}
+            >
+              Out Of Stock
+            </button>
           </div>
 
           {activeTab === 1 && (
@@ -132,7 +129,6 @@ function Inventory() {
                           <tr>
                             <th className="px-6 py-3">Image</th>
                             <th className="px-6 py-3">Product</th>
-                            <th className="px-6 py-3">brand</th>
                             <th className="px-6 py-3">Stock</th>
                             <th className="px-6 py-3">Price</th>
                             <th className="px-6 py-3">Edit</th>
@@ -147,11 +143,10 @@ function Inventory() {
                           searchedData.length > 0 ? (
                             searchedData.map((ele, i) => (
                               <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100 capitalize">
-                                <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
-                                  <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                <td className="px-6 py-3 text-center sm:w-10 w-8 h-16 rounded-md overflow-hidden">
+                                  <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                 </td>
                                 <td className="px-6 py-3 text-center">{ele.name}</td>
-                                <td className="px-6 py-3 text-center">{ele.brand}</td>
                                 <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
                                 <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                 <td className="px-6 py-3 text-center">
@@ -186,11 +181,10 @@ function Inventory() {
                             ) : (
                               items.map((ele, i) => (
                                 <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100 capitalize">
-                                  <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
-                                    <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                  <td className="px-6 py-3 text-center sm:w-10 w-8 h-16 rounded-md overflow-hidden">
+                                    <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                   </td>
                                   <td className="px-6 py-3 text-center">{ele.name}</td>
-                                  <td className="px-6 py-3 text-center">{ele.brand}</td>
                                   <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
                                   <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                   <td className="px-6 py-3 text-center">

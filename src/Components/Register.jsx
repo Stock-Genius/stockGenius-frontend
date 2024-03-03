@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../actions/action';
+import { useNavigate } from 'react-router-dom';
 import Loader from './Loader';
 import Message from './Message';
 
@@ -19,7 +19,6 @@ function Register() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
   const [user, setUser] = useState(initialState);
   const [alertBox, setAlertBox] = useState(false);
 
@@ -28,21 +27,18 @@ function Register() {
   const userRegister = useSelector((state) => state.userRegister);
   const { loading, error, userInfo } = userRegister;
 
-  // const redirect = location.search ? location.search.split('=')[1] : '/dashboard';
-
   useEffect(() => {
     if (userInfo || error) {
       setAlertBox(true);
     };
 
-    if (userInfo && userInfo.data) {
+    if (userInfo) {
       setTimeout(() => {
         setAlertBox(false);
       }, 2000);
-      navigate('/dashboard');
+      navigate('/login');
     };
   }, [navigate, dispatch, userRegister]);
-
 
   const handleValue = (e) => {
     setUser({
@@ -52,7 +48,6 @@ function Register() {
 
   const submitHandler = () => {
     dispatch(register(user));
-    dispatch({type: 'USER_LOGOUT'});
   };
 
   return (
@@ -120,13 +115,13 @@ function Register() {
             {/* Shop Details Section */}
             <div className="flex md:flex-row flex-col items-center mb-4">
               <div className="flex md:flex-row flex-col items-center md:items-start md:pr-8 w-full justify-center gap-x-32">
-                <h2 className="text-xl text-center font-semibold mb-2 opacity-70">Shop Details</h2>
+                <h2 className="text-xl text-center font-semibold mb-2 opacity-70">Bussiness Details</h2>
                 <div>
                   <div className=" relative pb-4 w-full">
                     <input
                       onChange={handleValue}
                       type="text"
-                      placeholder="Name"
+                      placeholder="Bussiness name"
                       name="shopname"
                       value={shopname}
                       className="w-full p-2 pr-16 bg-gray-200 border rounded-lg"

@@ -2,6 +2,8 @@ import axios from "axios";
 import { logout } from "./action";
 
 const baseUrl = "https://stockgenius-server.onrender.com";
+// const baseUrl = "http://localhost:5000/";
+
 
 // get all my items
 export const getItems = () => async (dispatch, getState) => {
@@ -33,9 +35,9 @@ export const getItems = () => async (dispatch, getState) => {
                 ? error.response.data.message
                 : error.message;
 
-        // if (message === 'Not authorized, token failed') {
-        //     dispatch(logout());
-        // }
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout());
+        }
         dispatch({
             type: 'GET_ITEMS_FAIL',
             payload: message,
@@ -196,22 +198,22 @@ export const sellAndUpdate = (obj) => async (dispatch, getState) => {
 
 
 // get all selling history
-export const mySellHistory = (config) => async (dispatch, getState) => {
+export const mySellHistory = () => async (dispatch, getState) => {
     try {
         dispatch({
             type: 'GET_SELL_ITEM_REQUEST',
         });
 
-        // const {
-        //     userLogin: { userInfo },
-        // } = getState();
+        const {
+            userLogin: { userInfo },
+        } = getState();
 
-        // const config = {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Authorization: `Bearer ${userInfo.token}`,
-        //     },
-        // };
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
 
         const { data } = await axios.get(`${baseUrl}/api/items/sell`, config);
 
@@ -236,13 +238,13 @@ export const mySellHistory = (config) => async (dispatch, getState) => {
     };
 };
 
+
 // delete single item from history
 export const deleteItemByHistory = (id) => async (dispatch, getState) => {
-    console.log(id,'id in action');
+    
     try {
-        console.log('try block');
         dispatch({
-            type: 'ITEM_DELETE_REQUEST',
+            type: 'HISTORY_DELETE_REQUEST',
         })
 
         const {
@@ -258,10 +260,10 @@ export const deleteItemByHistory = (id) => async (dispatch, getState) => {
         await axios.delete(`${baseUrl}/api/items/sell/${id}`, config)
 
         dispatch({
-            type: 'ITEM_DELETE_SUCCESS',
+            type: 'HISTORY_DELETE_SUCCESS',
         });
     } catch (error) {
-        console.log('api/items/sell');
+
         const message =
             error.response && error.response.data.message
                 ? error.response.data.message
@@ -270,7 +272,7 @@ export const deleteItemByHistory = (id) => async (dispatch, getState) => {
             dispatch(logout())
         }
         dispatch({
-            type: 'ITEM_DELETE_FAIL',
+            type: 'HISTORY_DELETE_FAIL',
             payload: message,
         })
     }

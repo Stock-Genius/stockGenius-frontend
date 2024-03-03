@@ -33,7 +33,6 @@ function Login() {
       setTimeout(() => {
         setAlertBox(false);
       }, 2000);
-      console.log('log was run');
       navigate('/dashboard');
     };
   }, [navigate, dispatch, userLogin]);

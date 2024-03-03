@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-function Header({ toggle, setToggle, darkMode,setDarkMode }) {
-  
+function Header({ toggle, setToggle, darkMode, setDarkMode }) {
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -10,9 +10,9 @@ function Header({ toggle, setToggle, darkMode,setDarkMode }) {
     <header className={`flex-wrap py-2 bg-white shadow-lg sticky top-0 z-50 flex items-center justify-between sm:p-3 md:tracking-widest dark:bg-secondary`}>
 
       <div className='dark:bg-[#ffffff4f] my-2 sm:py-3 h-10 sm:h-fit w-full sm:w-fit flex sm:gap-2 items-center justify-between mx-2 sm:justify-center rounded sm:px-2'>
-        <img 
-        src='/img/logo.png'
-        className='dark:brightness-0 drop-shadow-md h-full sm:w-full' alt="" />
+        <img
+          src='/img/logo.png'
+          className='dark:brightness-0 drop-shadow-md h-full sm:w-full' alt="" />
         <label className="hamburger">
           <input
             type="checkbox"
@@ -37,7 +37,7 @@ function Header({ toggle, setToggle, darkMode,setDarkMode }) {
           </div>
         </div>
         <div className="toggle-container">
-          <input type="checkbox" checked={darkMode} onChange={()=> setDarkMode(!darkMode)} className="toggle-input" />
+          <input type="checkbox" checked={darkMode} onChange={() => {setDarkMode(!darkMode); localStorage.setItem('darkMode', !darkMode) }} className="toggle-input" />
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 142" className="toggle">
             <path d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 292 31.7878 292 71C292 110.212 260.212 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z" className="toggle-background"></path>
             <rect rx="6" height="64" width="12" y="39" x="64" className="toggle-icon on"></rect>
@@ -53,9 +53,6 @@ function Header({ toggle, setToggle, darkMode,setDarkMode }) {
             </filter>
           </svg>
         </div>
-        {userInfo ? (
-          "" // menu button remove
-        ) : ""}
       </div>
     </header>
   );

@@ -38,10 +38,11 @@ export const updateItemReducer = (state = {}, action) => {
       }
     case 'UPDATE_ITEM_FAIL':
       return {
+        message: "",
         loading: false,
         error: action.payload,
       }
-    case 'RESET_STATE':
+    case 'UPDATE_ITEM_RESET':
       return state = {}
     default:
       return state
@@ -85,7 +86,6 @@ export const addItemReducer = (state = {}, action) => {
     case 'ADD_ITEM_SUCCESS':
       return {
         loading: false,
-        // items: action.payload,
         success: action.payload.success,
         message: action.payload.message
       }
@@ -95,7 +95,7 @@ export const addItemReducer = (state = {}, action) => {
         success: false,
         error: action.payload,
       }
-    case 'RESET_STATE':
+    case 'ADD_ITEM_RESET':
       return state = {}
     default:
       return state
@@ -122,7 +122,7 @@ export const sellItemReducer = (state = {}, action) => {
         success: false,
         error: action.payload,
       }
-    case 'RESET_STATE':
+    case 'ITEM_SELL_RESET':
       return state = {}
     default:
       return state
@@ -158,12 +158,14 @@ export const getMySellItemsReducer = (state = {}, action) => {
 // delete item by history
 export const deleteSellItemReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ITEM_DELETE_REQUEST':
+    case 'HISTORY_DELETE_REQUEST':
       return { loading: true }
-    case 'ITEM_DELETE_SUCCESS':
-      return { loading: false, success: true, message: 'Item Deleted!' }
-    case 'ITEM_DELETE_FAIL':
+    case 'HISTORY_DELETE_SUCCESS':
+      return { loading: false, success: true, message: 'Item removed successfully.' }
+    case 'HISTORY_DELETE_FAIL':
       return { loading: false, error: action.payload }
+    case 'HISTORY_DELETE_RESET':
+      return {};
     default:
       return state
   }

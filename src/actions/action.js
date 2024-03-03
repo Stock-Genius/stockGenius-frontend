@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const baseUrl = "https://stockgenius-server.onrender.com";
+// const baseUrl = "http://localhost:5000/";
 
-// regiister new user
+// register new user
 export const register = (obj) => async (dispatch) => {
     try {
         dispatch({
@@ -17,9 +18,8 @@ export const register = (obj) => async (dispatch) => {
 
         const { data } = await axios.post(`${baseUrl}/api/users`, obj, config);
 
-        dispatch({ type: 'USER_REGISTER_SUCCESS', payload: data })
-        console.log(data, 'data in action');
-        localStorage.setItem('userInfo', JSON.stringify(data.data));
+        dispatch({ type: 'USER_REGISTER_SUCCESS', payload: data.data });
+        // localStorage.setItem('userInfo', JSON.stringify(data.data));
 
     } catch (error) {
         dispatch({

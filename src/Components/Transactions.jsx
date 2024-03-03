@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from './Popup';
 import moment from 'moment';
-import { getItems, addMyItem, deleteItemByHistory } from '../actions/itemsAction';
+import { getItems, addMyItem } from '../actions/itemsAction';
 import Loader from './Loader';
 import Message from './Message';
 import { sellAndUpdate, mySellHistory } from '../actions/itemsAction';
@@ -15,8 +15,6 @@ const initial = {
   buyPrice: "",
   sellPrice: "",
   qty: "",
-  img: "",
-  brand: ""
 };
 
 function Transactions() {
@@ -26,9 +24,10 @@ function Transactions() {
   const [alertBox, setAlertBox] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState({});
   const [popup, setPopup] = useState(false);
-  const [value, setValue] = useState("");
   const [newMessage, setNewMessage] = useState('');
-  const [uploading, setUploading] = useState(false)
+  const [uploading, setUploading] = useState(false);
+  const [value, setValue] = useState("");
+
 
 
   const handleTabChange = (tabNumber) => {
@@ -37,9 +36,7 @@ function Transactions() {
 
   const [values, setValues] = useState(initial);
 
-  const { name, buyPrice, sellPrice, qty, img, brand } = values;
-
-  console.log(values);
+  const { name, buyPrice, sellPrice, qty } = values;
 
   const handleBuyProductValue = (e) => {
     setValues({
@@ -53,40 +50,39 @@ function Transactions() {
   const handleSubmit = () => {
 
     if (parseInt(sellPrice) <= parseInt(buyPrice)) {
-      setNewMessage('Sell price must be greater then buying');
+      setNewMessage('Sell price must be greater then cost price');
       setAlertBox(true);
     }
     else {
+      setNewMessage('')
       dispatch(addMyItem(values));
       setAlertBox(true);
       setValues(initial);
     }
   };
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+  // const uploadFileHandler = async (e) => {
+  //   const file = e.target.files[0];
+  //   const formData = new FormData()
+  //   formData.append('image', file)
+  //   setUploading(true)
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-      const { data } = await axios.post('/api/upload/products', formData, config);
-      setValues({
-        ...values, img: data
-      });
-      setUploading(false)
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
-    }
-  }
-
-
+  //   try {
+  //     const config = {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     }
+  //     const { data } = await axios.post('/api/upload/products', formData, config);
+  //     setValues({
+  //       ...values, img: data
+  //     });
+  //     setUploading(false)
+  //   } catch (error) {
+  //     console.error(error)
+  //     setUploading(false)
+  //   }
+  // }
 
   /**
   |--------------------------------------------------
@@ -97,23 +93,6 @@ function Transactions() {
   const [selectedProduct, setSelectedProduct] = useState(initial);
   const [productIndex, setProductIndex] = useState("");
 
-
-  const userInfoFromStorage = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
-
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${userInfoFromStorage.token}`,
-    },
-  };
-
-  useEffect(() => {
-    dispatch(getItems(config));
-    dispatch(mySellHistory(config));
-  }, [activeTab]);
-
   const myItems = useSelector((state) => state.myItems);
   const { items, loading, error: itemsError } = myItems;
 
@@ -121,17 +100,25 @@ function Transactions() {
   const { error: sellError, success: sellSuccess, message: sellMessage } = sellItem;
 
   const updateSellingProduct = () => {
-    if (selectedProduct) {
-      dispatch(sellAndUpdate(selectedProduct));
+    if (selectedProduct.buyPrice > selectedProduct.sellPrice) {
+      dispatch({ type: "UPDATE_ITEM_RESET" })
+      setNewMessage(`Sell price must be greater than ${selectedProduct.buyPrice}`);
       setAlertBox(true);
-      setSelectedProduct(initial);
+    } else {
+      setNewMessage('');
+      if (selectedProduct) {
+        dispatch(sellAndUpdate(selectedProduct));
+        setAlertBox(true);
+        setSelectedProduct(initial);
+      };
     };
   };
 
+
   const handleSellingProduct = (e) => {
-    const findProduct = items?.find(
-      (product) => product.name === (e.target.value !== '' ? e.target.value : initial));
-    setSelectedProduct(findProduct);
+    const selectedProductName = e.target.value;
+    const selectedProduct = items.find(item => item.name === selectedProductName);
+    setSelectedProduct(selectedProduct);
   };
 
   /**
@@ -140,7 +127,20 @@ function Transactions() {
   |--------------------------------------------------
   */
 
+  useEffect(() => {
+    dispatch(getItems());
+    dispatch(mySellHistory());
+  }, [activeTab, sellError, sellSuccess,]);
+
+  useEffect(() => {
+    dispatch({ type: "ADD_ITEM_RESET" });
+    dispatch({ type: 'ITEM_SELL_RESET' });
+    dispatch({ type: "HISTORY_DELETE_RESET" });
+    setAlertBox(false);
+  }, [activeTab])
+
   const { items: itemsHistory, loading: historyLoading, error: historyError } = useSelector((state) => state.sellHistory);
+
 
   const [selectedFromDate, setSelectedFromDate] = useState(moment().subtract(1, 'days').format('YYYY-MM-DD'));
   const [selectedToDate, setSelectedToDate] = useState(moment().format('YYYY-MM-DD'));
@@ -157,6 +157,16 @@ function Transactions() {
     setSelectedToDate(toDate);
     filterHistory(selectedFromDate, toDate);
   };
+
+  const deleteSellItem = useSelector((state) => state.deleteSellItem);
+  const { loading: deleteLoading, success: deleteSuccess, error: deleteError, message: deleteMessage } = deleteSellItem;
+
+  useEffect(() => {
+    if (deleteMessage || deleteSuccess || deleteError) {
+      setAlertBox(true);
+    }
+    dispatch(mySellHistory());
+  }, [deleteError, deleteLoading, deleteMessage]);
 
   const filterHistory = (fromDate, toDate) => {
     const fromDateObj = moment(fromDate, 'YYYY-MM-DD');
@@ -196,15 +206,6 @@ function Transactions() {
   | history logic starts here
   |--------------------------------------------------
   */
-
-  const deleteSellItem = useSelector((state) => state.deleteSellItem);
-  const { loading: deleteLoading, success: deleteSuccess, error: deleteError, message: deleteMessage } = deleteSellItem;
-
-  useEffect(() => {
-    if (deleteMessage || deleteSuccess || deleteError) {
-      setAlertBox(true);
-    }
-  }, [deleteSellItem]);
 
   const profits = itemsHistory ? filteredData.map((transaction) => {
     const buyPrice = parseFloat(transaction.buyPrice);
@@ -289,21 +290,10 @@ function Transactions() {
                         />
                       </div>
                       <div className="mb-6">
-                        <label htmlFor="productName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Brand Name <span className="text-red-500">*</span></label>
-                        <input
-                          type="text"
-                          placeholder="Enter brand name"
-                          name="brand"
-                          value={brand}
-                          onChange={handleBuyProductValue}
-                          className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
-                        />
-                      </div>
-                      <div className="mb-6">
-                        <label htmlFor="buyPrice" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Buying Price <span className="text-red-500">*</span></label>
+                        <label htmlFor="buyPrice" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Cost Price <span className="text-red-500">*</span></label>
                         <input
                           type="number"
-                          placeholder="Enter buying price"
+                          placeholder="Enter cost price"
                           name="buyPrice"
                           value={buyPrice}
                           onChange={handleBuyProductValue}
@@ -333,7 +323,7 @@ function Transactions() {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 w-full py-3 mb-6">
+                    {/* <div className="grid grid-cols-1 w-full py-3 mb-6">
                       <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-third hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -342,9 +332,9 @@ function Transactions() {
                           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload product image</span> or drag and drop </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG (MAX. 800x400px)</p>
                         </div>
-                        <input id="dropzone-file" name='img' value={img} custom onChange={uploadFileHandler} type="file" className="hidden" />
+                        <input id="dropzone-file" name='img' custom onChange={uploadFileHandler} type="file" className="hidden" />
                       </label>
-                    </div>
+                    </div> */}
                     <div className="flex justify-center">
                       <button onClick={handleSubmit} className="bg-primary text-white px-8 py-3 rounded-md hover:bg-opacity-90 focus:outline-none focus:bg-opacity-90">Submit Product</button>
                     </div>
@@ -375,13 +365,15 @@ function Transactions() {
                           <option selected>
                             example item
                           </option>
-                          {items?.map((ele, i) => (
+                          {items?.sort((a, b) => a.name.localeCompare(b.name)).map((ele, i) => (
                             <option key={i} value={ele.name}>
                               {ele.name}
                             </option>
                           ))}
+
                         </select>
                       </div>
+
                       <div className="mb-6">
                         <label htmlFor="buyPrice" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Selling Price <span className="text-red-500">*</span></label>
                         <input
@@ -392,7 +384,7 @@ function Transactions() {
                             { ...prev, [e.target.name]: e.target.value }
                           )))}
                           name="sellPrice"
-                          className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none   dark:text-gray-300"
+                          className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
                         />
                       </div>
                       <div className="mb-6">
@@ -431,8 +423,8 @@ function Transactions() {
             {activeTab === 3 && (
               <div className='mx-6'>
                 <div className="my-4 w-full">
-                  <div className="flex gap-4">
-                    <label htmlFor="fromDate" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  <div className="flex sm:gap-4 flex-wrap sm:flex-nowrap">
+                    <label htmlFor="fromDate" className="block mb-1  text-sm font-medium text-gray-900 dark:text-gray-300">
                       From Date
                     </label>
                     <input
@@ -440,10 +432,10 @@ function Transactions() {
                       id="fromDate"
                       value={selectedFromDate}
                       onChange={handleFromDateChange}
-                      className="p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-third dark:border-gray-600 dark:text-gray-300"
+                      className="p-2.5 mb-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-third dark:border-gray-600 dark:text-gray-300"
                     />
 
-                    <label htmlFor="toDate" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="toDate" className="mb-1 block text-sm font-medium text-gray-900 dark:text-gray-300">
                       To Date
                     </label>
                     <input
@@ -518,6 +510,7 @@ function Transactions() {
                     productId={productIndex} />
                 </div>
                 <div className='stcky bottom-0 bg-primary text-white my-3 flex md:flex-row flex-col md:justify-end'>
+                  <h3 className='text-xl m-2 capitalize border-b flex justify-between'>Sales Count:&nbsp; <strong>{filteredData.length}</strong></h3>
                   <h3 className='text-xl m-2 capitalize border-b flex justify-between'>Total sale:&nbsp; <strong>{totalSale}</strong></h3>
                   <h3 className='text-xl m-2 capitalize flex justify-between border-b'>Total profit:&nbsp; <strong>{totalProfit}</strong></h3>
                 </div>

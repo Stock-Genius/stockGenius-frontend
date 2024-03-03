@@ -32,7 +32,7 @@ function Profile({ toggle, setToggle, darkMode, setDarkMode }) {
             <Header toggle={toggle} setToggle={setToggle} setDarkMode={setDarkMode} darkMode={darkMode} />
             <div className='flex justify-center dark:bg-main'>
                 <Sidebar toggle={toggle} setToggle={setToggle} onItemClick={handleItemClick} selectedItem={selectedItem} />
-                <div className='w-full dark:bg-main'>
+                <div className='w-full min-h-screen dark:bg-main'>
                     {renderComponent()}
                 </div>
             </div>

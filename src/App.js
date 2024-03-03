@@ -9,8 +9,8 @@ import MainPage from './Components/MainPage'
 function App() {
 
   const [toggleSidebar, setSidebar] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
+  const darkModeLocalStorage = JSON.parse(localStorage.getItem('darkMode')) || false;
+  const [darkMode, setDarkMode] = useState(darkModeLocalStorage);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,10 +22,8 @@ function App() {
     }
   }, []);
 
-
   return (
-    <div className={`${darkMode && 'dark'}`}>
-      {/* <Header toggle={toggleSidebar} setToggle={setSidebar} /> */}
+    <div className={`${darkMode == true && 'dark'}`}>
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='/login' element={<Login />} />

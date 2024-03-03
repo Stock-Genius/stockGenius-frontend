@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { getItems } from '../actions/itemsAction';
 import { useSelector } from 'react-redux';
 import Popup from './Popup';
 import Loader from './Loader';
@@ -42,7 +41,6 @@ function OutOfStock() {
                                 <tr>
                                     <th className="px-6 py-3">Image</th>
                                     <th className="px-6 py-3">Product</th>
-                                    <th className="px-6 py-3">Brand</th>
                                     <th className="px-6 py-3">Stock</th>
                                     <th className="px-6 py-3">Price</th>
                                     <th className="px-6 py-3">Edit</th>
@@ -55,11 +53,10 @@ function OutOfStock() {
                         <tbody className='dark:text-neutral-400'>
                             {outOfStock && outOfStock.map((ele, i) => (
                                 <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:hover:bg-secondary hover:bg-gray-100 capitalize">
-                                    <td className="px-6 py-3 text-center sm:h-16 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
-                                        <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
-                                    </td>
+                                   <td className="px-6 py-3 text-center sm:w-10 w-8 h-16 rounded-md overflow-hidden">
+                                    <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                  </td>
                                     <td className="px-6 py-3 text-center">{ele.name}</td>
-                                    <td className="px-6 py-3 text-center">{ele.brand}</td>
                                     <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
                                     <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                     <td className="px-6 py-3 text-center">
