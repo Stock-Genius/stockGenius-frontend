@@ -33,7 +33,7 @@ function Sidebar({ onItemClick, selectedItem, toggle }) {
           onClick={() => { onItemClick('Transactions') }}
           className={`flex items-center overflow-hidden h-[5.6em] sm:h-[6em] mx-4 sm:mx-8 mt-4 p-3.5 sm:p-4 rounded-md after:top-0 flex-col after:-z-10 cursor-pointer relative after:transition-all hover:after:top-0 after:h-full after:w-full after:content-[""] after:bg-primary after:absolute transiiton-all z-20 bg-third ${selectedItem === 'Transactions' ? 'after:top-0' : 'after:top-full'
             }`}>
-          <i class="text-3xl sm:text-3xl mb-1 fa-regular fa-file-lines"></i>
+          <i className="text-3xl sm:text-3xl mb-1 fa-regular fa-file-lines"></i>
           Transactions
         </li>
         <li

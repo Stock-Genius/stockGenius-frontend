@@ -54,7 +54,7 @@ function OutOfStock() {
                             {outOfStock && outOfStock.map((ele, i) => (
                                 <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:hover:bg-secondary hover:bg-gray-100 capitalize">
                                    <td className="px-6 py-3 text-center sm:w-10 w-8 h-16 rounded-md overflow-hidden">
-                                    <img src={ele.img ? ele.iimg : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                                    <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                   </td>
                                     <td className="px-6 py-3 text-center">{ele.name}</td>
                                     <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
@@ -76,7 +76,7 @@ function OutOfStock() {
                                                 handlePopup(e, ele, ele._id);
                                             }}
                                             value="delete"
-                                            className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
+                                            className="bg-gray-200 dark:bg-main hover:bg-red-500 px-2.5 py-1.5 rounded-full dark:hover:bg-red-500 text-red-500 hover:text-white"
                                         >
                                             <i className="fas fa-trash pointer-events-none"></i>
                                         </button>

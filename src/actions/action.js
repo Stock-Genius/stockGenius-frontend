@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = "https://stockgenius-server.onrender.com";
-// const baseUrl = "http://localhost:5000/";
+const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 // register new user
 export const register = (obj) => async (dispatch) => {

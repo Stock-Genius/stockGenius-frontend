@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import Login from './Components/Login'
 import Register from './Components/Register'
-import Profile from './Components/Profile'
+import Dashboard from './Components/Dashboard'
 import ServerError from './Components/ServerError'
 import MainPage from './Components/MainPage'
+
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/servererror' element={<ServerError />} />
-        <Route path='/dashboard' element={<Profile toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode} setDarkMode={setDarkMode} />} />
+        <Route path='/dashboard' element={<Dashboard toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode} setDarkMode={setDarkMode} />} />
       </Routes>
     </div>
   )

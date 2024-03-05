@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateMyItem, deleteMyItem, deleteItemByHistory } from '../actions/itemsAction';
+import axios from 'axios';
+import Loader from './Loader';
 
+
+const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct, productId }) {
 
-    const dispatch = useDispatch()
-    // const [image, setImage] = useState('');
-    // const inputRef = useRef(null);
-    const { name: productname, qty, buyPrice, sellPrice } = selectedProduct;
+    const dispatch = useDispatch();
+    const [uploading, setUploading] = useState(false);
+
+    const { name: productname, qty, buyPrice, sellPrice, img } = selectedProduct;
 
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
@@ -20,6 +25,26 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
     const closePopup = () => {
         setPopup(false);
     };
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append("productImage", file);
+        setUploading(true);
+    
+        try {
+          const { data } = await axios.post(`${baseUrl}/api/upload/products`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          setUploading(false);
+          setUpdateProduct({ ...selectedProduct, img: data });
+        } catch (error) {
+          setUploading(false);
+          console.error('Error uploading file:', error);
+        }
+      }
 
     //update product function
     const handleUpdate = () => {
@@ -42,13 +67,6 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
         dispatch(deleteItemByHistory(productId));
         closePopup();
     }
-
-    //upload img function
-    // const handleImageChange = (e) => {
-    //     const imgPath = e.target.files[0];
-    //     setImage(imgPath);
-    // };
-
 
     // render the popup shown function
     const renderPopupContent = () => {
@@ -186,7 +204,16 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
             case 'edit':
                 return (
                     <>
-                        <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Update Product</h1>
+                        <div className='flex justify-between items-center'>
+                  <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Update Product</h1>
+                  <div className="w-16 h-16 rounded-full overflow-hidden mx-6 mt-8">
+                      <img
+                        src={img ? img : "/img/product.jpg"}
+                        alt="prodct"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                </div>
                         <hr className='my-4 mx-6' />
                         <div className="dark:bg-secondary rounded-sm max-w-screen-md mx-auto shadow-md mb-10 p-6 flex flex-col">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
@@ -233,6 +260,18 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                                         value={qty}
                                         className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none   dark:text-gray-300"
                                     />
+                                </div>
+                                {uploading && <Loader />}
+                                <div className="grid grid-cols-1 w-full py-3 mb-6">
+                                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-third hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-800">
+                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <i className="fa-solid fa-cloud-arrow-up text-3xl mb-4 text-gray-500 dark:text-gray-400"></i>
+                                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload product image</span> or drag and drop </p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">{img}</p>
+                                        </div>
+                                        <input id="dropzone-file" name='img' onChange={uploadFileHandler} type="file" accept="image/*" className="hidden" />
+                                    </label>
                                 </div>
                             </div>
                             <div className="flex justify-center">
@@ -370,8 +409,8 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                         className="bg-white dark:bg-main max-h-[95%] overflow-auto scroll px-10 pt-2 pb-10 rounded-xl shadow-lg z-10 flex flex-col"
                         style={{ boxShadow: "0px 10px 40px 0px #8552E51A" }}>
                         <button
-                            className="fixed cursor-pointer text-2xl text-gray-700 self-end"
-                            onClick={closePopup}> x
+                            className="fixed cursor-pointer text-2xl text-gray-700 self-end -mr-6"
+                            onClick={closePopup}> <i class="fa-solid fa-xmark"></i>
                         </button>
                         {renderPopupContent()}
                     </div>

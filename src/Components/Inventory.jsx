@@ -5,6 +5,8 @@ import { getItems } from "../actions/itemsAction";
 import Loader from "./Loader";
 import Message from "./Message";
 import OutOfStock from "./OutOfStock";
+import ServerError from "./ServerError";
+
 
 function Inventory() {
   const dispatch = useDispatch();
@@ -75,6 +77,7 @@ function Inventory() {
 
   return (
     <>
+
       {loading ? (
         <Loader />
       ) : (
@@ -82,7 +85,7 @@ function Inventory() {
           {alertBox && (
             <Message
               success={success ? true : (error || updateError || deleteError || deleteSuccess ? false : null)}
-              message={message ? message : deleteMessage ? deleteMessage : (error || updateError || deleteError ? error : null)}
+              message={message ? message : deleteMessage ? deleteMessage : (error || updateError || deleteError ? error : error)}
               setShowAlertBox={setAlertBox}
             />
           )}
@@ -119,6 +122,12 @@ function Inventory() {
                     />
                   </div>
                 </div>
+              </div>
+              <div className="">
+              {error && error === 'Request failed with status code 404' &&
+                (
+                  <ServerError error={error} />
+                )}
               </div>
               {items ? (
                 <div>
@@ -166,7 +175,7 @@ function Inventory() {
                                       handlePopup(e, ele, ele._id);
                                     }}
                                     value="delete"
-                                    className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
+                                    className="bg-gray-200 dark:bg-main hover:bg-red-500 px-2.5 py-1.5 rounded-full dark:hover:bg-red-500 text-red-500 hover:text-white"
                                   >
                                     <i className="fas fa-trash pointer-events-none"></i>
                                   </button>
@@ -204,7 +213,7 @@ function Inventory() {
                                         handlePopup(e, ele, ele._id);
                                       }}
                                       value="delete"
-                                      className="bg-gray-200 px-2.5 py-1.5 rounded-full dark:bg-main dark:hover:bg-primary hover:bg-red-600 text-red-400 hover:text-white"
+                                      className="bg-gray-200 dark:bg-main hover:bg-red-500 px-2.5 py-1.5 rounded-full dark:hover:bg-red-500 text-red-500 hover:text-white"
                                     >
                                       <i className="fas fa-trash pointer-events-none"></i>
                                     </button>

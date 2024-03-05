@@ -15,7 +15,12 @@ const initial = {
   buyPrice: "",
   sellPrice: "",
   qty: "",
+  img: ''
 };
+
+
+const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 function Transactions() {
 
@@ -28,15 +33,13 @@ function Transactions() {
   const [uploading, setUploading] = useState(false);
   const [value, setValue] = useState("");
 
-
-
   const handleTabChange = (tabNumber) => {
     setActiveTab(tabNumber);
   };
 
   const [values, setValues] = useState(initial);
 
-  const { name, buyPrice, sellPrice, qty } = values;
+  const { name, buyPrice, sellPrice, qty, img } = values;
 
   const handleBuyProductValue = (e) => {
     setValues({
@@ -61,28 +64,25 @@ function Transactions() {
     }
   };
 
-  // const uploadFileHandler = async (e) => {
-  //   const file = e.target.files[0];
-  //   const formData = new FormData()
-  //   formData.append('image', file)
-  //   setUploading(true)
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("productImage", file);
+    setUploading(true);
 
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     }
-  //     const { data } = await axios.post('/api/upload/products', formData, config);
-  //     setValues({
-  //       ...values, img: data
-  //     });
-  //     setUploading(false)
-  //   } catch (error) {
-  //     console.error(error)
-  //     setUploading(false)
-  //   }
-  // }
+    try {
+      const { data } = await axios.post(`${baseUrl}/api/upload/products`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setUploading(false);
+      setValues({ ...values, img: data });
+    } catch (error) {
+      setUploading(false);
+      console.error('Error uploading file:', error);
+    }
+  }
 
   /**
   |--------------------------------------------------
@@ -273,10 +273,20 @@ function Transactions() {
 
             {activeTab === 1 && (
               <>
-                <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Create Product</h1>
+                <div className='flex justify-between items-center'>
+                  <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Create Product</h1>
+                  <div className="w-16 h-16 rounded-full overflow-hidden mx-6 mt-8">
+                    <img
+                      src={img ? img : "/img/product.jpg"}
+                      alt="prodct"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
                 <hr className='my-4 mx-6' />
                 <div className="mx-auto shadow-md flex flex-wrap justify-between rounded-lg overflow-hidden mb-10">
                   <div className="p-6 w-full">
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
                       <div className="mb-6">
                         <label htmlFor="productName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Product Name <span className="text-red-500">*</span></label>
@@ -323,26 +333,26 @@ function Transactions() {
                         />
                       </div>
                     </div>
-                    {/* <div className="grid grid-cols-1 w-full py-3 mb-6">
-                      <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-third hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700">
+                    {/* Image uploader input */}
+                    {uploading && <Loader />}
+                    <div className="grid grid-cols-1 w-full py-3 mb-6">
+                      <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-third hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-800">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                          </svg>
+                          <i className="fa-solid fa-cloud-arrow-up text-3xl mb-4 text-gray-500 dark:text-gray-400"></i>
                           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload product image</span> or drag and drop </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG (MAX. 800x400px)</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{img}</p>
                         </div>
-                        <input id="dropzone-file" name='img' custom onChange={uploadFileHandler} type="file" className="hidden" />
+                        <input id="dropzone-file" name='img' onChange={uploadFileHandler} type="file" accept="image/*" className="hidden" />
                       </label>
-                    </div> */}
+                    </div>
+
                     <div className="flex justify-center">
                       <button onClick={handleSubmit} className="bg-primary text-white px-8 py-3 rounded-md hover:bg-opacity-90 focus:outline-none focus:bg-opacity-90">Submit Product</button>
                     </div>
                   </div>
-                  {uploading && <Loader />}
                 </div>
               </>
-
             )}
 
             {activeTab === 2 && (
@@ -456,6 +466,7 @@ function Transactions() {
                         <thead className="dark:text-white text-gray-700 dark:bg-secondary border-neutral-600 bg-gray-200">
                           <tr>
                             <th className="px-6 py-3">Date</th>
+                            <th className="px-6 py-3">Image</th>
                             <th className="px-6 py-3">Product</th>
                             <th className="px-6 py-3">Quantity</th>
                             <th className="px-6 py-3">Price</th>
@@ -467,6 +478,9 @@ function Transactions() {
                           {filteredData.map((ele, i) => (
                             <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100">
                               <td className="px-6 py-4 text-center">{formatDate(ele.date)}</td>
+                              <td className="px-6 py-3 text-center sm:w-10 w-8 h-16 rounded-md overflow-hidden">
+                                <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
+                              </td>
                               <td className="px-6 py-4 text-center">{ele.name}</td>
                               <td className="px-6 py-4 text-center">{ele.qty}</td>
                               <td className="px-6 py-4 text-center">{ele.sellPrice}</td>
@@ -477,7 +491,7 @@ function Transactions() {
                                     handlePopup(e, ele, ele._id);
                                   }}
                                   value="history"
-                                  className="bg-gray-200 dark:bg-main dark:hover:bg-primary px-2.5 py-1.5 rounded-full hover:bg-primary text-primary hover:text-white"
+                                  className="bg-gray-200 dark:bg-main hover:bg-red-500 px-2.5 py-1.5 rounded-full dark:hover:bg-red-500 text-red-500 hover:text-white"
                                 >
                                   <i className="fas fa-trash pointer-events-none"></i>
                                 </button>

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { logout } from "./action";
 
-const baseUrl = "https://stockgenius-server.onrender.com";
-// const baseUrl = "http://localhost:5000/";
+const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 
 // get all my items
@@ -241,7 +241,7 @@ export const mySellHistory = () => async (dispatch, getState) => {
 
 // delete single item from history
 export const deleteItemByHistory = (id) => async (dispatch, getState) => {
-    
+
     try {
         dispatch({
             type: 'HISTORY_DELETE_REQUEST',
