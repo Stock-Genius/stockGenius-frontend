@@ -16,7 +16,7 @@ export const register = (obj) => async (dispatch) => {
             },
         }
 
-        const { data } = await axios.post(`${baseUrl}api/users`, obj, config);
+        const { data } = await axios.post(`${baseUrl}/api/users`, obj, config);
 
         dispatch({ type: 'USER_REGISTER_SUCCESS', payload: data.data });
         // localStorage.setItem('userInfo', JSON.stringify(data.data));
@@ -43,7 +43,7 @@ export const login = (obj) => async (dispatch) => {
             }
         };
 
-        const { data } = await axios.post(`${baseUrl}api/users/login`, obj, config);
+        const { data } = await axios.post(`${baseUrl}/api/users/login`, obj, config);
 
         dispatch({ type: "USER_LOGIN_SUCCESS", payload: data.data });
 
