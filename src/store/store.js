@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { userLoginReducer, userRegisterReducer } from '../reducers/reducers';
+import { userLoginReducer, userRegisterReducer, userListReducer, userDetailsReducer, userUpdateProfileReducer } from '../reducers/reducers';
 import { thunk } from 'redux-thunk';
 
 import { addItemReducer, getMyItemsReducer, deleteItemReducer, updateItemReducer, deleteSellItemReducer, sellItemReducer, getMySellItemsReducer } from '../reducers/itemReducers';
@@ -14,7 +14,10 @@ const rootReducer = combineReducers({
     deleteItem: deleteItemReducer,
     sellItem: sellItemReducer,
     sellHistory: getMySellItemsReducer,
-    deleteSellItem: deleteSellItemReducer
+    deleteSellItem: deleteSellItemReducer,
+    userList: userListReducer,
+    userDetails: userDetailsReducer,
+    userUpdateProfile: userUpdateProfileReducer
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

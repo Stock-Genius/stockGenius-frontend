@@ -1,19 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../actions/action';
+import { logout, getUserDetails } from '../actions/action';
 import Popup from './Popup';
 import Loader from './Loader';
 import Message from './Message';
+import { useNavigate } from 'react-router-dom';
+import ServerError from './ServerError';
 
 function UserInfo() {
   const [popup, setPopup] = useState(false);
   const [value, setValue] = useState("");
-  const [selectedProduct, setSeletedProduct] = useState('');
-  const [productIndex, setProductIndex] = useState("");
-  const [alertBox, setAlertBox] = useState();
+  const [alertBox, setAlertBox] = useState(false);
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const navigate = useNavigate();
+
+  const userDetails = useSelector((state) => state.userDetails)
+  const { loading, error, user } = userDetails;
+  
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin;
+
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile)
+  const { success } = userUpdateProfile;
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/login');
+      setAlertBox(false);
+    } else {
+      if (success || error) setAlertBox(true);
+      if (!user || !user.name || success) {
+        dispatch({ type: 'USER_UPDATE_PROFILE_RESET' });
+        dispatch(getUserDetails());
+      }
+    }
+  }, [dispatch, navigate, user, success]);
 
   const handleLogout = () => {
     const status = window.confirm('Are you sure you want to log out?');
@@ -22,19 +43,22 @@ function UserInfo() {
     }
   };
 
-  const handlePopup = () => {
-    alert('Not available right now!');
-    // setValue(e.target.value);
-    // setPopup(true);
+  const handlePopup = (e) => {
+    setValue(e.target.value);
+    setPopup(true);
   };
 
   return (
     <div className="p-4 dark:bg-secondary m-6">
-      {userInfo ? (
+      {alertBox && <Message success={true} message={'Profile Updated'} setShowAlertBox={setAlertBox} />}
+      {error && <ServerError error={error} />}
+      {loading ? (
+        <Loader />
+      ) : user && (
         <>
-          <h1 className="text-2xl font-semibold mb-4 dark:text-neutral-100">Profile</h1>
+          <h1 className="text-2xl font-semibold mb-4 dark:text-neutral-100 tracking-wider">USER PROFILE</h1>
           <div className="flex flex-col md:flex-row items-center md:gap-10 gap-8">
-            <div className="w-40 h-40 rounded-full overflow-hidden border flex justify-center items-center">
+            <div className="w-40 h-40 rounded-full overflow-hidden flex justify-center items-center">
               <img
                 src="/img/user.jpeg"
                 alt="Profile"
@@ -42,15 +66,16 @@ function UserInfo() {
               />
             </div>
             <div>
-              <h2 className="text-xl font-semibold mb-2 capitalize dark:text-white">{userInfo.name}</h2>
-              <p className="text-gray-600 dark:text-neutral-400 ">{userInfo.email}</p>
-              <p className="text-gray-600 dark:text-neutral-400">{userInfo.shopname}</p>
-              <p className="text-gray-600 dark:text-neutral-400">{userInfo.address}</p>
+              <h2 className="text-xl font-semibold mb-2 capitalize dark:text-white">{user.name}</h2>
+              <p className="text-gray-600 dark:text-neutral-400 ">{user.email}</p>
+              <p className="text-gray-600 dark:text-neutral-400">{user.shopname}</p>
+              <p className="text-gray-600 dark:text-neutral-400">{user.address}</p>
             </div>
 
             <button
               onClick={handlePopup}
-              className="flex justify-center items-center gap-2 w-28 h-10 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 duration-300 hover:shadow-xl"
+              value='profileEdit'
+              className="flex justify-center items-center gap-2 w-28 h-10 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-primary hover:opacity-90 duration-300 hover:shadow-xl"
             >
               Edit <i className="fas fa-pencil pointer-events-none"></i>
             </button>
@@ -70,16 +95,12 @@ function UserInfo() {
             state={popup}
             setPopup={setPopup}
             popupValue={value}
-            selectedProduct={selectedProduct}
-            setUpdateProduct={setSeletedProduct}
-            productIndex={productIndex}
+            selectedProduct={""}
+            setUpdateProduct={""}
+            productIndex={""}
           />
         </>
-      ) : loading ? (
-        <Loader />
-      ) : error ? (
-        <Message success={userInfo ? userInfo.success : error && false} message={userInfo ? userInfo.message : error && error} setShowAlertBox={setAlertBox} />
-      ) : null}
+      )}
     </div>
   );
 }

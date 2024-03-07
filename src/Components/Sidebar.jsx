@@ -10,11 +10,11 @@ function Sidebar({ onItemClick, selectedItem, toggle }) {
 
   return (
     <div className=' fixed sm:sticky top-[105px] bottom-0 h-[85vh] left-0 sm:h-[82.8vh] z-40'>
-      <aside className={`overflow-y-auto pb-20 sm:w-[12em] w-[9em] h-full flex flex-col justify-between items-between z-40 bg-secondary text-neutral-200 ${toggle ? '-ml-0' : '-ml-52'}`} style={{ scrollbarWidth: 'thin' }}>
+      <aside className={`aside overflow-y-auto pb-20 sm:w-[12em] w-[9em] h-full flex flex-col justify-between items-between z-40 bg-secondary text-neutral-200 ${toggle ? '-ml-0' : '-ml-52'}`}>
       <ul>
         {userInfo && userInfo.isAdmin && (
           <li
-            onClick={() => { onItemClick('Inventory') }}
+            onClick={() => { onItemClick('Admin') }}
             className={`flex items-center overflow-hidden h-[5.6em] sm:h-[6em] mx-4 sm:mx-8 mt-4 p-3 sm:p-4 rounded-md after:top-0 flex-col after:-z-10 cursor-pointer relative after:transition-all hover:after:top-0 after:h-full after:w-full after:content-[""] after:bg-primary after:absolute transiiton-all z-20 bg-third ${selectedItem === 'Admin' ? 'after:top-0' : 'after:top-full'
               }`}>
             <i className="fa-solid fa-user-tie text-3xl sm:text-3xl mb-1"></i>

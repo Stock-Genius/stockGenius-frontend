@@ -5,6 +5,7 @@ import Transactions from './Transactions'
 import UserInfo from './UserInfo'
 import ServerError from './ServerError'
 import Header from './Header'
+import AdminDashboard from './AdminDashboard'
 
 
 function Profile({ toggle, setToggle, darkMode, setDarkMode }) {
@@ -22,6 +23,8 @@ function Profile({ toggle, setToggle, darkMode, setDarkMode }) {
                 return <Transactions />;
             case 'My Profile':
                 return <UserInfo />;
+            case 'Admin':
+                return <AdminDashboard />;
             default:
                 return <ServerError />;
         }

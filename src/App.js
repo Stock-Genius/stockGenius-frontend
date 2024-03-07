@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('userInfo'));
     if (!user?.token) {
-      navigate('/');
+      navigate('/login');
     } else {
       navigate('/dashboard');
     }
@@ -30,7 +30,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/servererror' element={<ServerError />} />
-        <Route path='/dashboard' element={<Dashboard toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode} setDarkMode={setDarkMode} />} />
+        <Route path='/dashboard' element={<Dashboard toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode}setDarkMode={setDarkMode} />} />
       </Routes>
     </div>
   )

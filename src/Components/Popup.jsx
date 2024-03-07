@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateMyItem, deleteMyItem, deleteItemByHistory } from '../actions/itemsAction';
+import { updateUserProfile } from "../actions/action";
 import axios from 'axios';
 import Loader from './Loader';
+import Message from './Message';
 
 
 const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
@@ -12,14 +14,29 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
 
     const dispatch = useDispatch();
     const [uploading, setUploading] = useState(false);
+    const [message, setMessage] = useState();
+    const [alertBox, setAlertBox] = useState(false);
+
 
     const { name: productname, qty, buyPrice, sellPrice, img } = selectedProduct;
 
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
+    const userDetails = useSelector((state) => state.userDetails)
+    const { user } = userDetails;
 
+    const [profile, setProfile] = useState(user ? user : {});
 
-    const [profile, setProfile] = useState(userInfo ? userInfo : {});
+    // update profile
+    const profileUpdateHandler = () => {
+        setMessage('');
+        if (profile.password !== profile.confirmPassword) {
+            setAlertBox(true);
+            setMessage('Passwords do not match');
+        } else {
+            closePopup();;
+            dispatch(updateUserProfile(profile));
+        }
+    }
+
 
     //close popup function
     const closePopup = () => {
@@ -31,20 +48,20 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
         const formData = new FormData();
         formData.append("productImage", file);
         setUploading(true);
-    
+
         try {
-          const { data } = await axios.post(`${baseUrl}/api/upload/products`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          setUploading(false);
-          setUpdateProduct({ ...selectedProduct, img: data });
+            const { data } = await axios.post(`${baseUrl}/api/upload/products`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setUploading(false);
+            setUpdateProduct({ ...selectedProduct, img: data });
         } catch (error) {
-          setUploading(false);
-          console.error('Error uploading file:', error);
+            setUploading(false);
+            console.error('Error uploading file:', error);
         }
-      }
+    }
 
     //update product function
     const handleUpdate = () => {
@@ -63,6 +80,7 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
         closePopup();
     }
 
+    // delete item in history
     const handleHistoryItem = () => {
         dispatch(deleteItemByHistory(productId));
         closePopup();
@@ -205,15 +223,15 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                 return (
                     <>
                         <div className='flex justify-between items-center'>
-                  <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Update Product</h1>
-                  <div className="w-16 h-16 rounded-full overflow-hidden mx-6 mt-8">
-                      <img
-                        src={img ? img : "/img/product.jpg"}
-                        alt="prodct"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                </div>
+                            <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Update Product</h1>
+                            <div className="w-16 h-16 rounded-full overflow-hidden mx-6 mt-8">
+                                <img
+                                    src={img ? img : "/img/product.jpg"}
+                                    alt="prodct"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        </div>
                         <hr className='my-4 mx-6' />
                         <div className="dark:bg-secondary rounded-sm max-w-screen-md mx-auto shadow-md mb-10 p-6 flex flex-col">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
@@ -279,16 +297,14 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                             </div>
                         </div>
                     </>
-
-
                 )
             case 'profileEdit':
                 return (
                     <div>
-                        <h1 className="text-2xl font-semibold mb-4 text-center">Update Your Profile</h1>
+                        <h1 className="text-2xl font-semibold mb-4 text-center dark:text-white">Update Your Profile</h1>
                         <hr className="mb-4" />
                         <div className='flex justify-center items-center flex-col  mb-4'>
-                            <div className="w-40 h-40 mb-4 rounded-full overflow-hidden border flex justify-center items-center">
+                            <div className="w-40 h-40 mb-4 rounded-full overflow-hidden flex justify-center items-center">
                                 <img
                                     // src={(userInfo && userInfo.img && !image) ? userInfo.img : image ? URL.createObjectURL(image) : './img/download.jpeg'}
                                     src='/img/user.jpeg'
@@ -298,101 +314,90 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                             </div>
                             <button
                                 // onClick={() => { inputRef.current.click(); }}
-                                onClick={() => { alert('Sorry!, This feature not supported write now.') }}
-                                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+                                onClick={() => { alert('Sorry!, \n This feature is Comming soon. \n Not available write now.') }}
+                                className="bg-primary text-white px-4 py-1 rounded hover:opacity-90">
                                 Upload Image <i className="fa-solid fa-upload"></i>
                             </button>
                             {/* <input type="file" onChange={handleImageChange} className='hidden' ref={inputRef} /> */}
                         </div>
                         <hr className="mb-4" />
-                        {/* Account Section */}
-                        <div className="flex md:flex-row flex-col items-center mb-4">
-                            <div className="flex md:flex-row flex-col items-center md:items-start md:pr-8 w-full justify-center gap-x-32">
-                                <h2 className="text-xl text-center font-semibold mb-2 opacity-70">Account</h2>
-                                <div>
-                                    <div className="relative pb-4 w-full">
-                                        <input
-                                            // onChange={handleProfileChange}
-                                            type="text"
-                                            placeholder="Full Name"
-                                            name="name"
-                                            value={userInfo ? profile.name : ""}
-                                            className="w-full p-2 pr-16 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                    <div className="relative pb-4">
-                                        <input
-                                            // onChange={handleProfileChange}
-                                            type="text"
-                                            placeholder="Email Id"
-                                            name="email"
-                                            value={userInfo ? profile.email : ""}
-                                            className="w-full p-2 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                    <div className="relative pb-4">
-                                        <input
-                                            // onChange={handleProfileChange}
-                                            type="password"
-                                            placeholder="Password"
-                                            name="password"
-                                            value={userInfo ? profile.password : ""}
-                                            className="w-full p-2 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                    <div className="relative pb-4">
-                                        <input
-                                            // onChange={handleProfileChange}
-                                            type="password"
-                                            placeholder="Confirm Password"
-                                            name="confirm_pass"
-                                            value={userInfo ? profile.confirm_pass : ""}
-                                            className="w-full p-2 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                </div>
+                        {/* Account and Shop Details Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:w-96 md:w-[600px]">
+                            <div className="mb-6">
+                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name <span className="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter full name"
+                                    name="name"
+                                    value={profile?.name || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, name: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address <span className="text-red-500">*</span></label>
+                                <input
+                                    type="email"
+                                    placeholder="Enter email address"
+                                    name="email"
+                                    value={profile?.email || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, email: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password <span className="text-red-500">*</span></label>
+                                <input
+                                    type="password"
+                                    placeholder="Enter password"
+                                    name="password"
+                                    value={profile?.password || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, password: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password <span className="text-red-500">*</span></label>
+                                <input
+                                    type="password"
+                                    placeholder="Confirm password"
+                                    name="confirmPassword"
+                                    value={profile?.confirmPassword || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, confirmPassword: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="shopName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Shop Name <span className="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter shop name"
+                                    name="shopname"
+                                    value={profile?.shopname || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, shopname: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Address <span className="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter address"
+                                    name="address"
+                                    value={profile?.address || ""}
+                                    onChange={(e) => { setProfile((prev) => ({ ...prev, address: e.target.value })) }}
+                                    className="mt-1 block bg-gray-200 w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-primary dark:bg-third dark:border-none dark:text-gray-300"
+                                />
                             </div>
                         </div>
-                        <hr className="mb-4" />
-                        {/* Shop Details Section */}
-                        <div className="flex md:flex-row flex-col items-center mb-4">
-                            <div className="flex md:flex-row flex-col items-center md:items-start md:pr-8 w-full justify-center gap-x-32">
-                                <h2 className="text-xl text-center font-semibold mb-2 opacity-70">Shop Details</h2>
-                                <div>
-                                    <div className="relative pb-4 w-full">
-                                        <input
-                                            // onChange={handleProfileChange}
-                                            type="text"
-                                            placeholder="Name"
-                                            name="shopname"
-                                            value={userInfo ? profile.shopname : ""}
-                                            className="w-full p-2 pr-16 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                    <div className="relative pb-4">
-                                        <input
-                                            type="text"
-                                            placeholder="Address"
-                                            name="address"
-                                            // onChange={handleProfileChange}
-                                            value={userInfo ? profile.address : ""}
-                                            className="w-full p-2 bg-gray-200 border rounded-lg"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="w-full flex flex-col justify-center items-center mt-8">
-                                <button
-                                    // onClick={submitProfileUpdate}
-                                    className="bg-blue-500 text-white px-20 py-2 rounded-2xl hover:bg-blue-600">
-                                    Update
-                                </button>
-                            </div>
+                        <div className="w-full flex justify-center mt-8">
+                            <button
+                                onClick={profileUpdateHandler}
+                                className="bg-primary text-white px-8 py-3 rounded-md hover:bg-opacity-90 focus:outline-none focus:bg-opacity-90">
+                                Update
+                            </button>
                         </div>
                     </div>
-
                 )
 
             default:
@@ -405,12 +410,13 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
             {state && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+                    {alertBox && <Message message={message} success={false} setShowAlertBox={setAlertBox} />}
                     <div
-                        className="bg-white dark:bg-main max-h-[95%] overflow-auto scroll px-10 pt-2 pb-10 rounded-xl shadow-lg z-10 flex flex-col"
+                        className="bg-white dark:bg-main max-h-[95%] mx-4 overflow-auto scroll px-10 pt-2 pb-10 rounded-xl shadow-lg z-10 flex flex-col"
                         style={{ boxShadow: "0px 10px 40px 0px #8552E51A" }}>
                         <button
                             className="fixed cursor-pointer text-2xl text-gray-700 self-end -mr-6"
-                            onClick={closePopup}> <i class="fa-solid fa-xmark"></i>
+                            onClick={closePopup}> <i className="hover:text-white duration-500 fa-solid fa-xmark"></i>
                         </button>
                         {renderPopupContent()}
                     </div>

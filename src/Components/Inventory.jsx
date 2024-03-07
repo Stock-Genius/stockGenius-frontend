@@ -74,7 +74,6 @@ function Inventory() {
     setActiveTab(tabNumber);
   };
 
-
   return (
     <>
 
@@ -124,7 +123,7 @@ function Inventory() {
                 </div>
               </div>
               <div className="">
-              {error && error === 'Request failed with status code 404' &&
+              {error && error === 'Request failed with status code 404' || error === 'Network Error' &&
                 (
                   <ServerError error={error} />
                 )}
