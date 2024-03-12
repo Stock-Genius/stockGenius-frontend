@@ -7,8 +7,8 @@ import Loader from './Loader';
 import Message from './Message';
 
 
-// const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
-const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
+const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct, productId }) {
 
