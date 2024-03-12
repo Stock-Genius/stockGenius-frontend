@@ -16,7 +16,7 @@ function UserInfo() {
 
   const userDetails = useSelector((state) => state.userDetails)
   const { loading, error, user } = userDetails;
-  
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin;
 
@@ -34,7 +34,7 @@ function UserInfo() {
         dispatch(getUserDetails());
       }
     }
-  }, [dispatch, navigate, user, success]);
+  }, [dispatch, navigate, user, success, error, userInfo]);
 
   const handleLogout = () => {
     const status = window.confirm('Are you sure you want to log out?');
@@ -60,7 +60,7 @@ function UserInfo() {
           <div className="flex flex-col md:flex-row items-center md:gap-10 gap-8">
             <div className="w-40 h-40 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/img/user.jpeg"
+                src={(user.img && user.img) || "/img/user.jpeg"}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />

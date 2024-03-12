@@ -144,7 +144,7 @@ function Inventory() {
                           </tr>
                         </thead>
                       ) : (
-                        <p className="text-lg font-semibold m-4">Add your products and let the magic begin! ✨ #StartSelling</p>
+                        <p className="text-lg font-semibold m-4 dark:text-white">Add your products and let the magic begin! ✨ #StartSelling</p>
                       )}
                       <tbody className='dark:text-neutral-400'>
                         {items ? (

@@ -1,10 +1,30 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { getUserDetails } from '../actions/action';
 
 function Header({ toggle, setToggle, darkMode, setDarkMode }) {
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userDetails = useSelector((state) => state.userDetails)
+  const { user } = userDetails;
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/login');
+    } else {
+      if (!user || !user.name) {
+        dispatch({ type: 'USER_UPDATE_PROFILE_RESET' });
+        dispatch(getUserDetails());
+      }
+    }
+  }, [dispatch, navigate, user, userInfo]);
+
 
   return (
     <header className={`flex-wrap py-2 bg-white shadow-lg sticky top-0 z-50 flex items-center justify-between sm:p-3 md:tracking-widest dark:bg-secondary`}>
@@ -29,15 +49,15 @@ function Header({ toggle, setToggle, darkMode, setDarkMode }) {
       <div className='flex justify-between mx-2 ml-5 sm:justify-end sm:w-fit w-full items-center'>
         <div className='flex gap-4 sm:px-2 sm:m-4 items-center'>
           <div className=" sm:h-10 sm:w-10 w-8 h-8 rounded-md overflow-hidden">
-            <img src="/img/user.jpeg" className='h-full w-full scale-125' alt="" />
+            <img src={(user.img && user.img) || "/img/user.jpeg"} className='min-h-full min-w-full scale-125' alt="" />
           </div>
           <div>
-            <h3 className='dark:text-neutral-300 text-sm sm:text-base font-semibold sm:block hidden'>{userInfo ? userInfo.name : "John Doe"}</h3>
-            <p className='text-[10px] sm:text-sm text-neutral-500 dark:text-neutral-400 sm:block hidden'>{userInfo && userInfo.isAdmin ? "Admin" : null}</p>
+            <h3 className='dark:text-neutral-300 text-sm sm:text-base font-semibold sm:block hidden'>{user ? user.name : "John Doe"}</h3>
+            <p className='text-[10px] sm:text-sm text-neutral-500 dark:text-neutral-400 sm:block hidden'>{user && user.email === 'admin@example.com' ? "Owner" : user.isAdmin ? "Admin" : "User"}</p>
           </div>
         </div>
         <div className="toggle-container">
-          <input type="checkbox" checked={darkMode} onChange={() => {setDarkMode(!darkMode); localStorage.setItem('darkMode', !darkMode) }} className="toggle-input" />
+          <input type="checkbox" checked={darkMode} onChange={() => { setDarkMode(!darkMode); localStorage.setItem('darkMode', !darkMode) }} className="toggle-input" />
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 142" className="toggle">
             <path d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 292 31.7878 292 71C292 110.212 260.212 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z" className="toggle-background"></path>
             <rect rx="6" height="64" width="12" y="39" x="64" className="toggle-icon on"></rect>

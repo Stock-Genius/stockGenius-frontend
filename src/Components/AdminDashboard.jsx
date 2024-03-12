@@ -48,14 +48,14 @@ function AdminDashboard() {
 
 
                                 <tr key={i} className="text-sm md:text-base border-b dark:border-secondary dark:border-b dark:hover:bg-secondary hover:bg-gray-100 ">
-                                    <td class="py-3 text-sm">
-                                        <div class="flex items-center cursor-pointer ml-4">
+                                    <td className="py-3 text-sm">
+                                        <div className="flex items-center cursor-pointer ml-4">
                                             <div className='w-9 h-9 overflow-hidden rounded-md'>
-                                                <img src='/img/user.jpeg' class="h-full w-full  shrink-0 scale-125" />
+                                                <img src={(ele.img && ele.img) || "/img/user.jpeg"} className="min-h-full min-w-full shrink-0 scale-125" alt='user' />
                                             </div>
-                                            <div class="ml-4">
-                                                <p class="text-sm text-black font-semibold dark:text-zinc-200">{ele.name}</p>
-                                                <p class="text-xs text-gray-500">{ele.email}</p>
+                                            <div className="ml-4">
+                                                <p className="text-sm text-black font-semibold dark:text-zinc-200">{ele.name}</p>
+                                                <p className="text-xs text-gray-500">{ele.email}</p>
                                             </div>
                                         </div>
                                     </td>

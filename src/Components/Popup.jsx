@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateMyItem, deleteMyItem, deleteItemByHistory } from '../actions/itemsAction';
 import { updateUserProfile } from "../actions/action";
@@ -7,8 +7,8 @@ import Loader from './Loader';
 import Message from './Message';
 
 
-const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
-// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
+// const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
+const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
 
 function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct, productId }) {
 
@@ -16,6 +16,7 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState();
     const [alertBox, setAlertBox] = useState(false);
+    const inputRef = useRef();
 
 
     const { name: productname, qty, buyPrice, sellPrice, img } = selectedProduct;
@@ -24,6 +25,27 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
     const { user } = userDetails;
 
     const [profile, setProfile] = useState(user ? user : {});
+
+    // upload user profile picture
+    const uploadProfilePic = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append("userImage", file);
+        setUploading(true);
+
+        try {
+            const { data } = await axios.post(`${baseUrl}/api/upload/users`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setUploading(false);
+            setProfile({ ...profile, img: data });
+        } catch (error) {
+            setUploading(false);
+            console.error('Error uploading file:', error);
+        }
+    }
 
     // update profile
     const profileUpdateHandler = () => {
@@ -36,7 +58,6 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
             dispatch(updateUserProfile(profile));
         }
     }
-
 
     //close popup function
     const closePopup = () => {
@@ -306,19 +327,19 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                         <div className='flex justify-center items-center flex-col  mb-4'>
                             <div className="w-40 h-40 mb-4 rounded-full overflow-hidden flex justify-center items-center">
                                 <img
-                                    // src={(userInfo && userInfo.img && !image) ? userInfo.img : image ? URL.createObjectURL(image) : './img/download.jpeg'}
-                                    src='/img/user.jpeg'
+                                    src={(profile.img && profile.img) || '/img/user.jpeg'}
+                                    // src='/img/user.jpeg'
                                     alt="profile img"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
                             <button
-                                // onClick={() => { inputRef.current.click(); }}
-                                onClick={() => { alert('Sorry!, \n This feature is Comming soon. \n Not available write now.') }}
+                                onClick={() => inputRef.current.click()}
+                                // onClick={() => { alert('Sorry!, \n This feature is Comming soon. \n Not available write now.') }}
                                 className="bg-primary text-white px-4 py-1 rounded hover:opacity-90">
                                 Upload Image <i className="fa-solid fa-upload"></i>
                             </button>
-                            {/* <input type="file" onChange={handleImageChange} className='hidden' ref={inputRef} /> */}
+                            <input type="file" onChange={uploadProfilePic} className='hidden' ref={inputRef} />
                         </div>
                         <hr className="mb-4" />
                         {/* Account and Shop Details Section */}
@@ -394,7 +415,7 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                             <button
                                 onClick={profileUpdateHandler}
                                 className="bg-primary text-white px-8 py-3 rounded-md hover:bg-opacity-90 focus:outline-none focus:bg-opacity-90">
-                                Update
+                                Update Profile
                             </button>
                         </div>
                     </div>
