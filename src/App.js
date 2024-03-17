@@ -5,6 +5,7 @@ import Register from './Components/Register'
 import Dashboard from './Components/Dashboard'
 import ServerError from './Components/ServerError'
 import MainPage from './Components/MainPage'
+import LandingPage from './Components/LandingPage'
 
 
 function App() {
@@ -26,11 +27,12 @@ function App() {
   return (
     <div className={`${darkMode == true && 'dark'}`}>
       <Routes>
-        <Route path='/' element={<MainPage />} />
+        <Route path='/' element={<LandingPage/>} />
+        <Route path='/gettingstarted' element={<MainPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/servererror' element={<ServerError />} />
-        <Route path='/dashboard' element={<Dashboard toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode}setDarkMode={setDarkMode} />} />
+        <Route path='/dashboard' element={<Dashboard toggle={toggleSidebar} setToggle={setSidebar} darkMode={darkMode} setDarkMode={setDarkMode} />} />
       </Routes>
     </div>
   )

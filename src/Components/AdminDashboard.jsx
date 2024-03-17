@@ -38,6 +38,7 @@ function AdminDashboard() {
                                 <th className="px-6 py-3">User</th>
                                 <th className="px-6 py-3">Company</th>
                                 <th className="px-6 py-3">Role</th>
+                                <th className="px-6 py-3">isActive</th>
                                 <th className="px-6 py-3">Joined At</th>
                                 <th className="px-6 py-3">Edit</th>
                                 <th className="px-6 py-3">Delete</th>
@@ -61,6 +62,16 @@ function AdminDashboard() {
                                     </td>
                                     <td className="px-6 py-3">{ele.shopname}</td>
                                     <td className={`px-6 py-3`}>{ele.isAdmin ? "Admin" : "User"}</td>
+                                    <td className={`px-6 py-3`}>
+                                        <div className="flex items-center">
+                                            <label className="relative cursor-pointer">
+                                                <input type="checkbox" checked={ele.isActive && true} className="sr-only peer" />
+                                                <div
+                                                    className="w-11 h-6 flex items-center bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#007bff]">
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td className="px-6 py-3 text-center">{ele?.createdAt.split('T')[0]}</td>
                                     <td className="px-6 py-3 text-center">
                                         <button
