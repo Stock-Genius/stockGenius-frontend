@@ -273,12 +273,12 @@ function Transactions() {
 
             {activeTab === 1 && (
               <>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center relative'>
                   <h1 className="md:text-3xl font-bold mt-8 mx-6 text-xl text-gray-800 dark:text-white">Create Product</h1>
                   <div className="w-16 h-16 rounded-full overflow-hidden mx-6 mt-8">
                     <img
                       src={img ? img : "/img/product.jpg"}
-                      alt="prodct"
+                      alt="product"
                       className="w-full h-full object-cover"
                     />
                   </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import Footer from './Footer';
 import { useSelector } from 'react-redux';
 
-
 function Sidebar({ onItemClick, selectedItem, toggle }) {
 
   const userLogin = useSelector((state) => state.userLogin);

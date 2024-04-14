@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from './Message';
 import Loader from './Loader';
 import { login } from '../actions/action';
+import PublicNavbar from './PublicNavbar';
+import Footer from './Footer';
 
 
 const initialState = {
@@ -50,6 +52,7 @@ function Login() {
 
   return (
     <>
+      <PublicNavbar />
       {
         loading ? (<Loader />) : (
           <div className="flex flex-col md:flex-row items-center justify-center min-h-screen p-6 bg-white">
@@ -88,7 +91,7 @@ function Login() {
               <div className="w-full flex flex-col justify-center items-center">
                 <button
                   onClick={submitHandler}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-2xl hover:bg-blue-600 w-full">
+                  className="bg-primary text-white px-4 py-2 rounded-2xl hover:opacity-90 w-full">
                   Login
                 </button>
                 <p className="mt-4 text-center">
@@ -98,6 +101,9 @@ function Login() {
             </div>
           </div>
         )}
+      <div className='py-8 '>
+        <Footer />
+      </div>
     </>
   )
 }

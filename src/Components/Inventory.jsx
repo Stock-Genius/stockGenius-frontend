@@ -41,7 +41,7 @@ function Inventory() {
     if (error || message || success || deleteSuccess || deleteMessage) {
       setAlertBox(true);
     }
-  }, [dispatch, userInfo, activeTab, success, message, deleteSuccess, deleteMessage]);
+  }, [dispatch, userInfo, success, message, deleteSuccess, deleteMessage]);
 
   useEffect(() => {
     dispatch({ type: "UPDATE_ITEM_RESET" });

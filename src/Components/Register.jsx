@@ -4,6 +4,8 @@ import { register } from '../actions/action';
 import { useNavigate } from 'react-router-dom';
 import Loader from './Loader';
 import Message from './Message';
+import PublicNavbar from './PublicNavbar';
+import Footer from './Footer';
 
 
 const initialState = {
@@ -52,6 +54,7 @@ function Register() {
 
   return (
     <>
+      <PublicNavbar />
       {
         loading ? (<Loader />) : (
           <div className="max-w-screen-md mx-auto p-6">
@@ -142,7 +145,7 @@ function Register() {
             </div>
             <div>
               <div className="w-full flex flex-col justify-center items-center mt-8">
-                <button onClick={submitHandler} className="bg-blue-500 text-white px-20 py-2 rounded-2xl hover:bg-blue-600 ">
+                <button onClick={submitHandler} className="bg-primary text-white px-20 py-2 rounded-2xl hover:opacity-90 ">
                   Register
                 </button>
                 <p className="mt-4">
@@ -152,7 +155,9 @@ function Register() {
             </div>
           </div>
         )}
-
+      <div className='py-8 '>
+        <Footer />
+      </div>
     </>
   );
 }
