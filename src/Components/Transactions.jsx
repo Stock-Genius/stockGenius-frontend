@@ -362,6 +362,7 @@ function Transactions() {
                 <div className="mx-auto shadow-md rounded-lg overflow-hidden mb-10">
                   <div className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      
                       <div className="mb-6">
                         <label htmlFor="productName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Select an item <span className="text-red-500">*</span></label>
                         <select
