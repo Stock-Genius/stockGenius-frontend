@@ -57,7 +57,7 @@ function OutOfStock() {
                                     <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                   </td>
                                     <td className="px-6 py-3 text-center">{ele.name}</td>
-                                    <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                    <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : `${parseFloat(ele.qty).toFixed(2)}${ele.unit}`}</td>
                                     <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                     <td className="px-6 py-3 text-center">
                                         <button

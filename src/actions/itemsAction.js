@@ -1,9 +1,7 @@
 import axios from "axios";
 import { logout } from "./action";
 
-const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
-// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
-
+const baseUrl = process.env.REACT_APP_SERVER_URL;
 
 // get all my items
 export const getItems = () => async (dispatch, getState) => {

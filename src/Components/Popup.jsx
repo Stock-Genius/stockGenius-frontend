@@ -7,8 +7,7 @@ import Loader from './Loader';
 import Message from './Message';
 
 
-const baseUrl = process.env.REACT_APP_SERVER_PRODUCTION_URL;
-// const baseUrl = process.env.REACT_APP_SERVER_DEVELOPEMENT_URL;
+const baseUrl = process.env.REACT_APP_SERVER_URL;
 
 function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct, productId }) {
 
@@ -301,7 +300,7 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                                     />
                                 </div>
                                 {uploading && <Loader />}
-                                <div className="grid grid-cols-1 w-full py-3 mb-6">
+                                <div className="grid grid-cols-1 w-full py-3 mb-6" onClick={()=> alert("Currently not supported")}>
                                     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-third hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-800">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <i className="fa-solid fa-cloud-arrow-up text-3xl mb-4 text-gray-500 dark:text-gray-400"></i>
@@ -309,7 +308,7 @@ function Popup({ state, setPopup, popupValue, selectedProduct, setUpdateProduct,
                                             <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG</p>
                                             <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">{img}</p>
                                         </div>
-                                        <input id="dropzone-file" name='img' onChange={uploadFileHandler} type="file" accept="image/*" className="hidden" />
+                                        {/* <input id="dropzone-file" name='img' onChange={uploadFileHandler} type="file" accept="image/*" className="hidden" /> */}
                                     </label>
                                 </div>
                             </div>

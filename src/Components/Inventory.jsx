@@ -20,7 +20,7 @@ function Inventory() {
   const [alertBox, setAlertBox] = useState(false);
 
   const myItems = useSelector((state) => state.myItems);
-  const { items, loading, error } = myItems;
+  const { items, loading, error } = myItems;  
 
   const updateItem = useSelector((state) => state.updateItem);
   const { error: updateError, success, message } = updateItem;
@@ -155,7 +155,7 @@ function Inventory() {
                                   <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                 </td>
                                 <td className="px-6 py-3 text-center">{ele.name}</td>
-                                <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : `${parseFloat(ele.qty).toFixed(2)}${ele.unit}`}</td>
                                 <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                 <td className="px-6 py-3 text-center">
                                   <button
@@ -193,7 +193,7 @@ function Inventory() {
                                     <img src={ele.img ? ele.img : '/img/sample.jpg'} className='h-full w-full scale-125' alt="" />
                                   </td>
                                   <td className="px-6 py-3 text-center">{ele.name}</td>
-                                  <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : ele.qty}</td>
+                                  <td className={`px-6 py-3 text-center ${ele.qty == 0 && 'text-red-600 font-semibold'}`}>{ele.qty == 0 ? 'out of stock' : `${parseFloat(ele.qty).toFixed(2)}${ele.unit}`}</td>
                                   <td className="px-6 py-3 text-center">{ele.sellPrice}</td>
                                   <td className="px-6 py-3 text-center">
                                     <button

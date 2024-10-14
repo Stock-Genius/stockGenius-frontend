@@ -11,10 +11,10 @@ function AdminDashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const userList = useSelector((state) => state.userList)
+    const userList = useSelector((state) => state.userList);
     const { loading, error, users } = userList;
 
-    const userLogin = useSelector((state) => state.userLogin)
+    const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin
 
     useEffect(() => {
