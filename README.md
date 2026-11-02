@@ -9,13 +9,6 @@ Inventory and shop management UI for small businesses — track stock, sales, an
 - Frontend: [https://stockgenius.vercel.app](https://stockgenius.vercel.app)
 - API: deploy/run [stockGenius-server](https://github.com/Stock-Genius/stockGenius-server) and point `REACT_APP_SERVER_URL` at it
 
-## Screenshots
-
-<!-- Add PNGs under docs/screenshots/ and embed here -->
-| Landing | Dashboard | Inventory |
-| --- | --- | --- |
-| ![Landing](docs/screenshots/landing.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Inventory](docs/screenshots/inventory.png) |
-
 ## Key features
 
 - Landing / getting-started flow for new shop owners
