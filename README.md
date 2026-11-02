@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# Stock Genius (Frontend)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Inventory and shop management UI for small businesses — track stock, sales, and shop profile in one dashboard.
 
-## Available Scripts
+**Pair with backend:** [stockGenius-server](https://github.com/Stock-Genius/stockGenius-server)
 
-In the project directory, you can run:
+## Live demo
 
-### `npm start`
+- Frontend: [https://stockgenius.vercel.app](https://stockgenius.vercel.app)
+- API: deploy/run [stockGenius-server](https://github.com/Stock-Genius/stockGenius-server) and point `REACT_APP_SERVER_URL` at it
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Screenshots
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<!-- Add PNGs under docs/screenshots/ and embed here -->
+| Landing | Dashboard | Inventory |
+| --- | --- | --- |
+| ![Landing](docs/screenshots/landing.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Inventory](docs/screenshots/inventory.png) |
 
-### `npm test`
+## Key features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Landing / getting-started flow for new shop owners
+- JWT-backed login and registration (shop name, address, profile image)
+- Dark mode with local preference
+- Inventory CRUD with buy/sell price, quantity, and unit (`kg` / `pcs`)
+- Sell flow and transaction history views
+- Out-of-stock highlighting
+- Admin dashboard surface for elevated users
+- Image uploads via backend upload API
+- Responsive layout (React + Tailwind + MUI)
 
-### `npm run build`
+## Tech stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Layer | Choice |
+| --- | --- |
+| UI | React 18 (Create React App) |
+| State | Redux + redux-thunk |
+| Routing | React Router v6 |
+| Styling | Tailwind CSS, MUI |
+| HTTP | Axios |
+| Hosting | Vercel (`stockgenius.vercel.app`) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Architecture (brief)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+Browser (CRA/React + Redux)
+    │  REST + JWT in localStorage
+    ▼
+stockGenius-server (Express + MongoDB)
+```
 
-### `npm run eject`
+Frontend stores `userInfo` (including token) in `localStorage`, calls `/api/users` and `/api/items` on the configured server URL, and routes protected pages under `/dashboard`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Getting started
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Node.js 18+
+- Running instance of [stockGenius-server](https://github.com/Stock-Genius/stockGenius-server)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Install
 
-## Learn More
+```bash
+git clone https://github.com/Stock-Genius/stockGenius-frontend.git
+cd stockGenius-frontend
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Environment
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Create a `.env` in the project root (do **not** commit secrets):
 
-### Code Splitting
+```bash
+REACT_APP_SERVER_URL=http://localhost:4000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Variable | Required | Description |
+| --- | --- | --- |
+| `REACT_APP_SERVER_URL` | Yes | Base URL of stockGenius-server (no trailing path) |
 
-### Analyzing the Bundle Size
+### Run
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm start          # http://localhost:3000
+npm test           # CRA test runner
+npm run build      # production build → build/
+```
 
-### Making a Progressive Web App
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Vercel:** connect this repo; set `REACT_APP_SERVER_URL` to your production API origin; build command `npm run build`, output `build`.
+- Ensure the API allows your Vercel origin via CORS.
 
-### Advanced Configuration
+## Roadmap
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- [ ] Replace CRA with Vite or Next.js
+- [ ] TypeScript + RTK Query
+- [ ] E2E tests (Playwright)
+- [ ] Remove tracked `build/` artifacts from git
+- [ ] Social preview / Open Graph image
 
-### Deployment
+## Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**Hafiz Abdullah** — [GitHub](https://github.com/hafizabdullah1) · [hafizabdullah.site](https://hafizabdullah.site)
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT license recommended (add `LICENSE` file).
